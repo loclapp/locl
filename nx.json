@@ -1,0 +1,39 @@
+{
+  "npmScope": "locl",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "web-e2e": {
+      "tags": []
+    },
+    "web": {
+      "tags": ["web"]
+    },
+    "electron": {
+      "tags": ["electron"]
+    },
+    "libs": {
+      "tags": []
+    },
+    "core": {
+      "tags": ["core"]
+    },
+    "common": {
+      "tags": ["common"]
+    },
+    "utils": {
+      "tags": ["utils"]
+    },
+    "cli": {
+      "tags": ["cli"]
+    },
+    "app": {
+      "tags": ["app:web", "app:electron"]
+    }
+  }
+}
