@@ -1,0 +1,15 @@
+{
+  "name": "commitlint-plugin-body-content",
+  "version": "1.0.0",
+  "description": "",
+  "main": "commitlint-plugin-body-content.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["commitlint","commitlintplugin"],
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@commitlint/lint": ">=7.6.0"
+  }
+}

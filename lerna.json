@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "dist/libs/*",
+    "dist/apps/*"
+  ],
+  "version": "independent"
+}
