@@ -1,19 +1,19 @@
 {
-  "name": "app",
-  "version": "1.0.0",
-  "description": "App description.",
+  "name": "@locl/app",
+  "version": "0.0.1",
+  "description": "Translation app by Locl",
   "main": "index.js",
   "author": {
-    "name": "Your name",
-    "email": "name@company.com"
+    "name": "Olivier Combe",
+    "email": "olivier@locl.app"
   },
-  "homepage": "https://nstudio.io/xplat",
+  "homepage": "https://www.locl.app/",
   "repository": {
-    "url": "https://github.com/nstudio/xplat"
+    "url": "https://github.com/loclapp/locl"
   },
   "license": "MIT",
   "build": {
-    "appId": "com.company.app",
+    "appId": "com.locl.app",
     "productName": "App",
     "copyright": "Copyright © 2018-2019 locl",
     "asar": false,
