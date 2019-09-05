@@ -12,28 +12,43 @@
       "tags": []
     },
     "web": {
-      "tags": ["web"]
+      "tags": [
+        "web"
+      ]
     },
     "electron": {
-      "tags": ["electron"]
+      "tags": [
+        "electron"
+      ]
     },
     "libs": {
       "tags": []
     },
     "core": {
-      "tags": ["core"]
+      "tags": [
+        "core"
+      ]
     },
     "common": {
-      "tags": ["common"]
+      "tags": [
+        "common"
+      ]
     },
     "utils": {
-      "tags": ["utils"]
+      "tags": [
+        "utils"
+      ]
     },
     "cli": {
-      "tags": ["cli"]
+      "tags": [
+        "cli"
+      ]
     },
     "app": {
-      "tags": ["app:web", "app:electron"]
+      "tags": [
+        "app:web",
+        "app:electron"
+      ]
     }
   }
 }

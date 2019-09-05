@@ -1,7 +1,7 @@
 const message = require('@commitlint/message');
 
 function getErrorMsg(negated, value, types) {
-  return message(['body', negated ? 'may not' : 'must', `contain [${ value }] for scopes [${types.join(', ')}]`])
+  return message(['body', negated ? 'may not' : 'must', `contain [${value}] for scopes [${types.join(', ')}]`]);
 }
 
 module.exports = {
@@ -14,10 +14,10 @@ module.exports = {
       const types = params[1];
 
       if (!body) {
-        if(negated || types.indexOf(type) === -1) {
+        if (negated || types.indexOf(type) === -1) {
           return [true];
         } else {
-          return [false, getErrorMsg(negated, value, types)]
+          return [false, getErrorMsg(negated, value, types)];
         }
       }
 

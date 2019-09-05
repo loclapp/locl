@@ -3,5 +3,8 @@
   "compilerOptions": {
     "outDir": "../dist/out-tsc/xplat"
   },
-  "exclude": ["test.xplat.ts", "**/*.spec.ts"]
+  "exclude": [
+    "test.xplat.ts",
+    "**/*.spec.ts"
+  ]
 }

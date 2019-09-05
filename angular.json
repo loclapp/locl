@@ -21,8 +21,13 @@
             "polyfills": "apps/web/src/polyfills.ts",
             "tsConfig": "apps/web/tsconfig.web.json",
             "aot": false,
-            "assets": ["apps/web/src/favicon.ico", "apps/web/src/assets"],
-            "styles": ["apps/web/src/styles.scss"],
+            "assets": [
+              "apps/web/src/favicon.ico",
+              "apps/web/src/assets"
+            ],
+            "styles": [
+              "apps/web/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -76,7 +81,10 @@
               "apps/web/tsconfig.web.json",
               "apps/web/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/web/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/web/**"
+            ]
           }
         },
         "test": {
@@ -110,8 +118,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/web-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/web-e2e/**"]
+            "tsConfig": [
+              "apps/web-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/web-e2e/**"
+            ]
           }
         }
       }
@@ -137,7 +150,9 @@
               "testing/tsconfig.libs.json",
               "testing/tsconfig.libs.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -162,7 +177,10 @@
               "libs/core/tsconfig.lib.json",
               "libs/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/core/**"
+            ]
           }
         },
         "test": {
@@ -200,7 +218,10 @@
               "libs/utils/tsconfig.lib.json",
               "libs/utils/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/utils/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/utils/**"
+            ]
           }
         },
         "test": {
@@ -244,11 +265,15 @@
               {
                 "glob": "**/*",
                 "input": "apps/electron/src/",
-                "ignore": ["**/*.ts"],
+                "ignore": [
+                  "**/*.ts"
+                ],
                 "output": ""
               }
             ],
-            "styles": ["apps/web/src/styles.scss"],
+            "styles": [
+              "apps/web/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -311,7 +336,10 @@
               "libs/common/tsconfig.lib.json",
               "libs/common/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/common/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/common/**"
+            ]
           }
         },
         "test": {
@@ -349,7 +377,10 @@
               "libs/cli/tsconfig.lib.json",
               "libs/cli/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/cli/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/cli/**"
+            ]
           }
         },
         "test": {
@@ -380,7 +411,10 @@
               "libs/app/tsconfig.lib.json",
               "libs/app/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/app/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/app/**"
+            ]
           }
         },
         "test": {

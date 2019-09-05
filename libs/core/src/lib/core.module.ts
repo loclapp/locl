@@ -3,4 +3,5 @@ import { NgModule } from '@angular/core';
 @NgModule({
   imports: []
 })
-export class LoclCoreModule {}
+export class LoclCoreModule {
+}

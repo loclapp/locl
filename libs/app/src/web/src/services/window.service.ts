@@ -1,8 +1,8 @@
 // angular
 import { Injectable } from '@angular/core';
-
 // app
 import { isObject } from '../../../../../utils/src/lib/objects';
+
 @Injectable()
 export class WindowPlatformService {
   public navigator: any = {};
@@ -10,12 +10,20 @@ export class WindowPlatformService {
   public localStorage: any;
   public process: any;
   public require: any;
-  public alert(msg: any) {}
-  public confirm(msg: any) {}
+
+  public alert(msg: any) {
+  }
+
+  public confirm(msg: any) {
+  }
+
   public setTimeout(handler: (...args: any[]) => void, timeout?: number) {
     return 0;
   }
-  public clearTimeout(timeoutId: number) {}
+
+  public clearTimeout(timeoutId: number) {
+  }
+
   public setInterval(
     handler: (...args: any[]) => void,
     ms?: number,
@@ -23,7 +31,9 @@ export class WindowPlatformService {
   ) {
     return 0;
   }
-  public clearInterval(intervalId: number) {}
+
+  public clearInterval(intervalId: number) {
+  }
 
   // ...You can expand support for more window methods as you need them here...
 }
@@ -31,7 +41,7 @@ export class WindowPlatformService {
 @Injectable()
 export class WindowService {
   constructor(private _platformWindow: WindowPlatformService) {
-    console.log('windows service')
+    console.log('windows service');
   }
 
   public get navigator() {
@@ -67,7 +77,7 @@ export class WindowService {
     action?: Function /* used for fancyalerts on mobile*/
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      const result: any = (<any>this._platformWindow).confirm(msg,undefined);
+      const result: any = (<any>this._platformWindow).confirm(msg, undefined);
       if (isObject(result) && result.then) {
         result.then(resolve, reject);
       } else if (result) {

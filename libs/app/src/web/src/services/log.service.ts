@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 
 export interface IDebug {
-  [key: string]: boolean;
   LEVEL_1: boolean;
   LEVEL_2: boolean;
   LEVEL_3: boolean;
   LEVEL_4: boolean;
   LEVEL_5: boolean;
+
+  [key: string]: boolean;
 }
 
 @Injectable()

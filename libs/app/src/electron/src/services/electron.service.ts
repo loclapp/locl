@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { isElectron } from '@locl/utils';
 import { LogService, WindowService } from '@locl/app-web';
+import { isElectron } from '@locl/utils';
 import * as childProcess from 'child_process';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 

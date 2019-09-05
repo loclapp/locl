@@ -10,20 +10,42 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@locl/*": ["libs/*"],
-      "@locl/core": ["libs/core/src/index.ts"],
-      "@locl/utils": ["libs/utils/src/index.ts"],
-      "@locl/common": ["libs/common/src/index.ts"],
-      "@locl/cli": ["libs/cli/src/index.ts"],
-      "@locl/app-web": ["libs/app/src/web/index.ts"],
-      "@locl/app-electron": ["libs/app/src/electron/index.ts"]
+      "@locl/*": [
+        "libs/*"
+      ],
+      "@locl/core": [
+        "libs/core/src/index.ts"
+      ],
+      "@locl/utils": [
+        "libs/utils/src/index.ts"
+      ],
+      "@locl/common": [
+        "libs/common/src/index.ts"
+      ],
+      "@locl/cli": [
+        "libs/cli/src/index.ts"
+      ],
+      "@locl/app-web": [
+        "libs/app/src/web/index.ts"
+      ],
+      "@locl/app-electron": [
+        "libs/app/src/electron/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
