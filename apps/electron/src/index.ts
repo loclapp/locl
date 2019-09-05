@@ -25,7 +25,8 @@ const mainWindowSettings: Electron.BrowserWindowConstructorOptions = {
   fullscreenable: true,
   kiosk: false,
   webPreferences: {
-    devTools: debugMode
+    devTools: debugMode,
+    nodeIntegration: true,
   }
 };
 

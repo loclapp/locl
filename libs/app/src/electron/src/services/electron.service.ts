@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { isElectron } from '@locl/utils';
 import { LogService, WindowService } from '@locl/app-web';
 import * as childProcess from 'child_process';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 
 @Injectable()
 export class ElectronService {
@@ -18,7 +18,7 @@ export class ElectronService {
     }
   }
 
-  public on(channel: string, listener: Function): void {
+  public on(channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void): void {
     if (!this._ipc) {
       return;
     }
