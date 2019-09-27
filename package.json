@@ -59,6 +59,7 @@
     "@angular/router": "9.0.0-next.6",
     "@locl/scss": "file:libs/scss",
     "@nrwl/angular": "8.5.0",
+    "bulma": "0.7.5",
     "core-js": "3.2.1",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.3",

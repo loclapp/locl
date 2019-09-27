@@ -4,4 +4,37 @@
  */
 
 // could use a base theme here, for example:
-// @import '~@angular/material/theming';
+$radius: 2px;
+
+/* Colors: https://coolors.co/ffc338-ba2727-0874bd-373734-f0f4ed */
+$red: #ba2727;
+$yellow: #ffc338;
+$orange: #ffa814;
+$green: #83b800;
+$blue: #0874bd;
+$cyan: #209CEE;
+$black: #1c1c1c;
+$grey-darker: #373a4c;
+$grey-dark: #373734;
+$grey-light: #f0f4ed;
+$beige-light: #D0D1CD;
+$beige-lighter: #EFF0EB;
+
+$primary: $blue;
+$secondary: $green;
+$background: $grey-dark;
+$content-bg: #fff;
+$btn-bg: $grey-dark;
+$btn-color: #fff;
+
+$text-color: $black;
+$text: $grey-dark;
+$link: $blue;
+$info: $cyan;
+$success: $green;
+$warning: $yellow;
+$danger: $red;
+$dark: $grey-darker;
+
+$input-background-color: $beige-lighter;
+$input-shadow: none;
