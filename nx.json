@@ -21,9 +21,6 @@
         "electron"
       ]
     },
-    "libs": {
-      "tags": []
-    },
     "core": {
       "tags": [
         "core"
