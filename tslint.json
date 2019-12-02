@@ -10,10 +10,7 @@
     "deprecation": {
       "severity": "warn"
     },
-    "import-blacklist": [
-      true,
-      "rxjs/Rx"
-    ],
+    "import-blacklist": [true, "rxjs/Rx"],
     "interface-over-type-literal": true,
     "member-access": false,
     "member-ordering": [
@@ -29,25 +26,16 @@
     ],
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": [
-      true,
-      "debug",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": [true, "debug", "time", "timeEnd", "trace"],
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-super": true,
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
-    "no-inferrable-types": [
-      true,
-      "ignore-params"
-    ],
+    "no-inferrable-types": [true, "ignore-params"],
     "no-misused-new": true,
-    "no-non-null-assertion": true,
+    "no-non-null-assertion": false,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
@@ -58,10 +46,7 @@
     "object-literal-sort-keys": false,
     "prefer-const": true,
     "radix": true,
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
+    "triple-equals": [true, "allow-null-check"],
     "unified-signatures": true,
     "variable-name": false,
     "nx-enforce-module-boundaries": [
@@ -71,9 +56,7 @@
         "depConstraints": [
           {
             "sourceTag": "*",
-            "onlyDependOnLibsWithTags": [
-              "*"
-            ]
+            "onlyDependOnLibsWithTags": ["*"]
           },
           {
             "sourceTag": "common",
@@ -81,50 +64,29 @@
           },
           {
             "sourceTag": "core",
-            "onlyDependOnLibsWithTags": [
-              "common"
-            ]
+            "onlyDependOnLibsWithTags": ["common"]
           },
           {
             "sourceTag": "utils",
-            "onlyDependOnLibsWithTags": [
-              "common"
-            ]
+            "onlyDependOnLibsWithTags": ["common"]
           },
           {
             "sourceTag": "app:web",
-            "onlyDependOnLibsWithTags": [
-              "*"
-            ]
+            "onlyDependOnLibsWithTags": ["*"]
           },
           {
             "sourceTag": "app:electron",
-            "onlyDependOnLibsWithTags": [
-              "*"
-            ]
+            "onlyDependOnLibsWithTags": ["*"]
           },
           {
             "sourceTag": "cli",
-            "onlyDependOnLibsWithTags": [
-              "common",
-              "utils"
-            ]
+            "onlyDependOnLibsWithTags": ["common", "utils"]
           }
         ]
       }
     ],
-    "directive-selector": [
-      true,
-      "attribute",
-      "locl",
-      "camelCase"
-    ],
-    "component-selector": [
-      true,
-      "element",
-      "locl",
-      "kebab-case"
-    ],
+    "directive-selector": [true, "attribute", "locl", "camelCase"],
+    "component-selector": [true, "element", "locl", "kebab-case"],
     "no-conflicting-lifecycle": true,
     "no-host-metadata-property": true,
     "no-input-rename": true,
