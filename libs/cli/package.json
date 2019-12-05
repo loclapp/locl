@@ -1,4 +1,26 @@
 {
   "name": "@locl/cli",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "bin": {
+    "locl": "./src/locl"
+  },
+  "scripts": {
+    "build": "ng build cli && npm run build:apiAndLib && npm run build:copy",
+    "build:apiAndLib": "tsc -p src/tsconfig.json",
+    "build:copy": "cpx ./README.md ../../dist/libs/cli && cpx src/locl ../../dist/libs/cli/src",
+    "pretest": "npm run build",
+    "test": "jasmine ../../dist/libs/cli/**/*spec.js"
+  },
+  "dependencies": {
+    "@angular/localize": "^9.0.0-rc.5",
+    "@babel/core": "7.6.4",
+    "find-up": "4.1.0",
+    "glob": "7.1.2",
+    "yargs": "13.1.0"
+  },
+  "devDependencies": {
+    "@types/babel-core": "^6.25.6",
+    "@types/yargs": "^13.0.3",
+    "@types/glob": "^7.1.1"
+  }
 }
