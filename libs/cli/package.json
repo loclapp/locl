@@ -1,13 +1,14 @@
 {
   "name": "@locl/cli",
   "version": "0.0.1-beta.1",
+  "license": "AGPL-3.0-or-later",
   "bin": {
     "locl": "./src/locl"
   },
   "scripts": {
     "build": "ng build cli && npm run build:apiAndLib && npm run build:copy",
     "build:apiAndLib": "tsc -p src/tsconfig.json",
-    "build:copy": "cpx ./README.md ../../dist/libs/cli && cpx src/locl ../../dist/libs/cli/src",
+    "build:copy": "cpx src/locl ../../dist/libs/cli/src",
     "pretest": "npm run build",
     "test": "jasmine ../../dist/libs/cli/**/*spec.js"
   },
