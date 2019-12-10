@@ -4,6 +4,8 @@
 
 A library with various utility functions to help you with `$localize`.
 
+[Demo on StackBlitz](https://stackblitz.com/edit/ivy-ovy4cd) (it can take a long time to load the first time because ivy support on StackBlitz is still WIP).
+
 ## Installation
 
 Install the core library with npm:

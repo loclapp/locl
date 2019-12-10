@@ -1,8 +1,8 @@
 {
   "locale": "fr",
   "translations": {
-    "7576130697560411795": "Bienvenue à app {$INTERPOLATION}!!",
-    "9205907420411818817": "bar",
-    "foo": "foobar"
+    "4571727307714732203": "Bienvenue à la démo de {$PH}!!",
+    "5105652583545451042": "Ça fonctionne!",
+    "foo": "id personnalisé"
   }
 }

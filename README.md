@@ -6,13 +6,14 @@
 
 A library with various utility functions to help you with \$localize.
 
-- [Documentation](tree/master/libs/core)
+- [Documentation](libs/core)
+- [Demo on StackBlitz](https://stackblitz.com/edit/ivy-ovy4cd) (it can take a long time to load the first time because ivy support on StackBlitz is still WIP).
 
 ### CLI
 
 Dev tools to help you with `$localize` and Angular i18n.
 
-- [Documentation](tree/master/libs/cli)
+- [Documentation](libs/cli)
 
 ### License
 

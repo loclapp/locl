@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 
+const name = '$localize + Locl';
+
 @Component({
   selector: 'locl-root',
   styleUrls: ['./app.component.scss'],
-  template: `
-    <h1 i18n>Welcome to app {{ title }}!</h1>
-  `
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'web-demo';
+  title = $localize`Welcome to the demo of ${name}!`;
 
   constructor() {
-    console.log($localize`:@@foo:Welcome to ${'web'}!`);
-    console.log($localize`foo`);
+    console.log($localize`:@@foo:custom id!`);
   }
 }
