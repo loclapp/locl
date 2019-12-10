@@ -1,6 +1,6 @@
 {
   "name": "@locl/core",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.1",
   "peerDependencies": {
     "@angular/core": ">=9.0.0-next.5"
   }

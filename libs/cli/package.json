@@ -1,6 +1,6 @@
 {
   "name": "@locl/cli",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.1",
   "bin": {
     "locl": "./src/locl"
   },
