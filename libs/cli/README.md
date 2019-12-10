@@ -2,6 +2,20 @@
 
 # Locl CLI
 
+Dev tools to help you with `$localize` and Angular i18n.
+
+## Installation
+
+Install the cli tools with npm:
+
+```sh
+npm install @locl/cli --save-dev
+```
+
+## Usage
+
+You can get a full list of commands with `npx locl --help`.
+
 ### Extraction
 
 You can use `locl extract` to extract translations from your ivy application:

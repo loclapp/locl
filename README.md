@@ -2,4 +2,14 @@
 
 🌐 **Locl is an internationalization (i18n) tools suite for Angular.**
 
-More documentation soon...
+### Core
+
+A library with various utility functions to help you with \$localize.
+
+- [Documentation](tree/master/libs/core)
+
+### CLI
+
+Dev tools to help you with `$localize` and Angular i18n.
+
+- [Documentation](tree/master/libs/cli)

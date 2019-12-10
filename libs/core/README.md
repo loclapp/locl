@@ -4,6 +4,16 @@
 
 A library with various utility functions to help you with `$localize`.
 
+## Installation
+
+Install the core library with npm:
+
+```sh
+npm install @locl/core --save
+```
+
+## Usage
+
 ### Loading the translations at runtime
 
 Angular translates the templates as soon as the components are loaded, which means that if you want to load the translations at runtime, you need to load them before the application starts.
