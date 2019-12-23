@@ -2,7 +2,7 @@
 
 # Locl Core
 
-A library with various utility functions to help you with `$localize`.
+A library with various utility functions to help you with `$localize` (if you need help to get started with `$localize`, [read this](https://blog.ninja-squad.com/2019/12/10/angular-localize/)).
 
 [Demo on StackBlitz](https://stackblitz.com/edit/ivy-ovy4cd) (it can take a long time to load the first time because ivy support on StackBlitz is still WIP).
 
