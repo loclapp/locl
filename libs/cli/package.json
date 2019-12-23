@@ -13,11 +13,11 @@
     "test": "jasmine ../../dist/libs/cli/**/*spec.js"
   },
   "dependencies": {
-    "@angular/localize": "^9.0.0-rc.5",
-    "@babel/core": "7.6.4",
-    "find-up": "4.1.0",
-    "glob": "7.1.2",
-    "yargs": "13.1.0"
+    "@angular/localize": "^9.0.0-rc.7",
+    "@babel/core": "^7.6.4",
+    "find-up": "^4.1.0",
+    "glob": "^7.1.2",
+    "yargs": "^13.1.0"
   },
   "devDependencies": {
     "@types/babel-core": "^6.25.6",
