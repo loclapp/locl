@@ -10,19 +10,27 @@ import { TranslationSerializer } from './translation_serializer';
 import { XmlFile } from './xml_file';
 
 export class Xliff1TranslationSerializer implements TranslationSerializer {
-  renderFile(messages: ɵParsedMessage[]): string {
+  renderFile(
+    messages: ɵParsedMessage[],
+    locale: string,
+    isTarget = false
+  ): string {
     const xml = new XmlFile();
+    const tagName = isTarget ? 'target' : 'source';
     xml.startTag('xliff', {
       version: '1.2',
       xmlns: 'urn:oasis:names:tc:xliff:document:1.2'
     });
-    xml.startTag('file', { 'source-language': 'en', datatype: 'plaintext' });
+    xml.startTag('file', {
+      [isTarget ? 'target-language' : 'source-language']: locale,
+      datatype: 'plaintext'
+    });
     xml.startTag('body');
     messages.forEach(message => {
       xml.startTag('trans-unit', { id: message.messageId, datatype: 'html' });
-      xml.startTag('source', {}, { preserveWhitespace: true });
+      xml.startTag(tagName, {}, { preserveWhitespace: true });
       this.renderMessage(xml, message);
-      xml.endTag('source', { preserveWhitespace: false });
+      xml.endTag(tagName, { preserveWhitespace: false });
       if (message.description) {
         this.renderNote(xml, 'description', message.description);
       }

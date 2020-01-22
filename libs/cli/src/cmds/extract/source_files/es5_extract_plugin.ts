@@ -15,9 +15,11 @@ import {
   unwrapMessagePartsFromLocalizeCall,
   unwrapSubstitutionsFromLocalizeCall
 } from '../source_file_utils';
+import { Diagnostics } from '../../common/diagnostics';
 
 export function makeEs5ExtractPlugin(
   messages: ɵParsedMessage[],
+  diagnostics: Diagnostics,
   localizeName = '$localize'
 ): PluginObj {
   return {
@@ -33,7 +35,9 @@ export function makeEs5ExtractPlugin(
             callPath.node
           );
           const message = ɵparseMessage(messageParts, expressions);
-          messages.push(message);
+          if (!messages.find(msg => msg.messageId === message.messageId)) {
+            messages.push(message);
+          }
         }
       }
     }

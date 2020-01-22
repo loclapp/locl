@@ -13,7 +13,8 @@ import {
 } from '@angular/localize';
 import { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
-import { Diagnostics } from './diagnostics';
+import { ParsedTranslation } from '@angular/localize/src/utils';
+import { Diagnostics } from '../common/diagnostics';
 
 /**
  * Is the given `expression` an identifier with the correct name

@@ -31,6 +31,32 @@ Always use `--prod` or `--aot` when you build your application.
 
 #### Options:
 
-- `--source` (`-o`): A glob pattern indicating what files to search for translations, e.g. `./dist/**/*.js`. This can be absolute or relative to the current working directory.
+- `--source` (`-s`): A glob pattern indicating what files to search for translations, e.g. `./dist/**/*.js`. This can be absolute or relative to the current working directory.
 - `--format` (`-f`): the format of the translation file to generate. Either `xlf`, `xlf2`, `xmb` or `json`.
+- `--outputPath` (`-o`): A path to where the translation file will be written. This can be absolute or relative to the current working directory.
+- `--locale` (`-l`): The locale for the extracted file, "en" by default.
+
+### Conversion
+
+You can use `locl convert` to convert translations from one format to another:
+
+```
+locl convert -s=dist/i18n/fr.xlf -f=json -o=dist/i18n/fr.json
+```
+
+The conversion tool will read all translation files from the source glob and generate a file of the specified format at the specified output path.
+
+Since the source glob can be used to take multiple files as input, it is possible to use this tool to aggregate multiple translation files into one:
+
+```
+locl convert -s=dist/i18n/*.xlf -f=json -o=dist/i18n/fr.json
+```
+
+It is recommended to use this tool to convert your files to json if you want to lazy load the translations at bootstrap,
+since it is the only format that is supported by the existing loaders, and it is the most optimized one in terms of size.
+
+#### Options:
+
+- `--source` (`-s`): A glob pattern indicating what files to convert, e.g. `./assets/**/*.xlf`. This can be absolute or relative to the current working directory. Only translation files are supported (json, xtb & xlf but not xmb).
+- `--format` (`-f`): The format of the translation files to generate. Either `xlf`, `xlf2`, `xtb` or `json`.
 - `--outputPath` (`-o`): A path to where the translation file will be written. This can be absolute or relative to the current working directory.

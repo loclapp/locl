@@ -14,9 +14,9 @@ interface SimpleJsonTranslationFile {
 }
 
 export class JsonTranslationSerializer implements TranslationSerializer {
-  renderFile(messages: ɵParsedMessage[]): string {
+  renderFile(messages: ɵParsedMessage[], locale: string): string {
     const fileObj: SimpleJsonTranslationFile = {
-      locale: 'en',
+      locale,
       translations: {}
     };
     messages.forEach(message => {

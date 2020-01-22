@@ -10,12 +10,18 @@ import { TranslationSerializer } from './translation_serializer';
 import { XmlFile } from './xml_file';
 
 export class Xliff2TranslationSerializer implements TranslationSerializer {
-  renderFile(messages: ɵParsedMessage[]): string {
+  renderFile(
+    messages: ɵParsedMessage[],
+    locale: string,
+    isTarget = false
+  ): string {
     const xml = new XmlFile();
+    const tagName = isTarget ? 'target' : 'source';
     xml.startTag('xliff', {
       version: '2.0',
       xmlns: 'urn:oasis:names:tc:xliff:document:2.0',
-      srcLang: 'en'
+      srcLang: locale,
+      trgLang: locale
     });
     xml.startTag('file');
     messages.forEach(message => {
@@ -31,9 +37,9 @@ export class Xliff2TranslationSerializer implements TranslationSerializer {
         xml.endTag('notes');
       }
       xml.startTag('segment');
-      xml.startTag('source', {}, { preserveWhitespace: true });
+      xml.startTag(tagName, {}, { preserveWhitespace: true });
       this.renderMessage(xml, message);
-      xml.endTag('source', { preserveWhitespace: false });
+      xml.endTag(tagName, { preserveWhitespace: false });
       xml.endTag('segment');
       xml.endTag('unit');
     });

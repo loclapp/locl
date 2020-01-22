@@ -9,33 +9,31 @@ import { ɵParsedMessage } from '@angular/localize';
 import { TranslationSerializer } from './translation_serializer';
 import { XmlFile } from './xml_file';
 
-const DOCTYPE = `<!ELEMENT messagebundle (msg)*>
-<!ATTLIST messagebundle class CDATA #IMPLIED>
+const DOCTYPE = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE translationbundle [
+<!ELEMENT translationbundle (translation)*>
+<!ATTLIST translationbundle lang CDATA #REQUIRED>
 
-<!ELEMENT msg (#PCDATA|ph|source)*>
-<!ATTLIST msg id CDATA #IMPLIED>
-<!ATTLIST msg seq CDATA #IMPLIED>
-<!ATTLIST msg name CDATA #IMPLIED>
-<!ATTLIST msg desc CDATA #IMPLIED>
-<!ATTLIST msg meaning CDATA #IMPLIED>
-<!ATTLIST msg obsolete (obsolete) #IMPLIED>
-<!ATTLIST msg xml:space (default|preserve) "default">
-<!ATTLIST msg is_hidden CDATA #IMPLIED>
-
-<!ELEMENT source (#PCDATA)>
+<!ELEMENT translation (#PCDATA|ph)*>
+<!ATTLIST translation id CDATA #REQUIRED>
+<!ATTLIST translation desc CDATA #IMPLIED>
+<!ATTLIST translation meaning CDATA #IMPLIED>
+<!ATTLIST translation xml:space (default|preserve) "default">
 
 <!ELEMENT ph (#PCDATA|ex)*>
 <!ATTLIST ph name CDATA #REQUIRED>
 
-<!ELEMENT ex (#PCDATA)>`;
+<!ELEMENT ex (#PCDATA)>
+]>
+`;
 
-export class XmbTranslationSerializer implements TranslationSerializer {
-  renderFile(messages: ɵParsedMessage[]): string {
+export class XtbTranslationSerializer implements TranslationSerializer {
+  renderFile(messages: ɵParsedMessage[], locale: string): string {
     const xml = new XmlFile();
-    xml.startTag('messagebundle');
+    xml.startTag('translationbundle', { lang: locale });
     messages.forEach(message => {
       xml.startTag(
-        'msg',
+        'translation',
         {
           id: message.messageId,
           desc: message.description,
@@ -44,10 +42,10 @@ export class XmbTranslationSerializer implements TranslationSerializer {
         { preserveWhitespace: true }
       );
       this.renderMessage(xml, message);
-      xml.endTag('msg', { preserveWhitespace: false });
+      xml.endTag('translation', { preserveWhitespace: false });
     });
-    xml.endTag('messagebundle');
-    return xml.toString();
+    xml.endTag('translationbundle');
+    return DOCTYPE + xml.toString();
   }
 
   private renderMessage(xml: XmlFile, message: ɵParsedMessage): void {

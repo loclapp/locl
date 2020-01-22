@@ -15,5 +15,9 @@ export interface TranslationSerializer {
    * Render the contents of a translation file containing the given `messages`.
    * @param messages The messages to render to the file.
    */
-  renderFile(messages: ɵParsedMessage[]): string;
+  renderFile(
+    messages: ɵParsedMessage[],
+    locale: string,
+    isTarget?: boolean
+  ): string;
 }
