@@ -52,7 +52,7 @@
     "start.web": "npm run postinstall.web && ng serve web",
     "start.demo": "ng serve demo",
     "build.demo": "ng build demo --aot",
-    "clean": "npx rimraf hooks node_modules package-lock.json && npm i",
+    "clean": "npx rimraf hooks node_modules package-lock.json dist && npm i",
     "locl-extract": "locl extract -s=dist/apps/demo/*.js -f=json -o=dist/i18n/en.json"
   },
   "private": true,
