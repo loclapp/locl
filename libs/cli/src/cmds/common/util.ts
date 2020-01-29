@@ -35,6 +35,17 @@ export function getTranslationSerializer(
   }
 }
 
+export function getExtension(format: TranslationFormat): string {
+  switch (format) {
+    case 'json':
+    case 'xmb':
+    case 'xtb':
+      return format;
+    default:
+      return 'xlf';
+  }
+}
+
 /**
  * The character used to mark the start and end of a "block" in a `$localize` tagged string.
  * A block can indicate metadata about the message or specify a name of a placeholder for a

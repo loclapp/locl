@@ -49,4 +49,17 @@ export class FileUtils {
   static isRoot(absolutePath: string): boolean {
     return path.dirname(absolutePath) === absolutePath;
   }
+
+  static dedup(files: string[], pattern: RegExp, replaceValue = ''): string[] {
+    const filesSet = files.map(file => file.replace(pattern, replaceValue));
+    const dedup = [];
+    const indexes = [];
+    filesSet.forEach((file: string, index: number) => {
+      if (dedup.indexOf(file) === -1) {
+        dedup.push(file);
+        indexes.push(index);
+      }
+    });
+    return indexes.map(index => files[index]);
+  }
 }

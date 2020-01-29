@@ -1,8 +1,4 @@
-import {
-  loadTranslations,
-  ɵMessageId,
-  ɵTargetMessage
-} from '@angular/localize';
+import { ɵMessageId, ɵTargetMessage } from '@angular/localize';
 
 export function parseTranslations(
   fileContent: string

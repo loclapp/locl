@@ -17,6 +17,20 @@ describe('extract', () => {
 
     expect(spy).toHaveBeenCalledWith('/i18/en.xlf', sourceXlf);
   });
+
+  it('should create files automatically if output is a folder', () => {
+    mockFile(['main-es2015.js', '/i18'], [mainEs2015]);
+    const spy = spyOn(FileUtils, 'writeFile');
+
+    extractTranslations({
+      format: 'xlf',
+      sourceGlob: 'main-es2015.js',
+      outputPath: '/i18',
+      diagnostics: new Diagnostics()
+    });
+
+    expect(spy).toHaveBeenCalledWith('/i18/main.en.xlf', sourceXlf);
+  });
 });
 
 const mainEs2015 = `

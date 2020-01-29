@@ -33,7 +33,7 @@ Always use `--prod` or `--aot` when you build your application.
 
 - `--source` (`-s`): A glob pattern indicating what files to search for translations, e.g. `./dist/**/*.js`. This can be absolute or relative to the current working directory.
 - `--format` (`-f`): the format of the translation file to generate. Either `xlf`, `xlf2`, `xmb` or `json`.
-- `--outputPath` (`-o`): A path to where the translation file will be written. This can be absolute or relative to the current working directory.
+- `--outputPath` (`-o`): A path to where the translation file will be written. This can be absolute or relative to the current working directory. If the given path is a file, it will aggregate the translations of all the source files into one translation file. Otherwise it will generate one translation file per file parsed.
 - `--locale` (`-l`): The locale for the extracted file, "en" by default.
 
 ### Conversion

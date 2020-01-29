@@ -1,6 +1,6 @@
 import { TranslationLoader } from '@angular/localize/src/tools/src/translate/translation_files/translation_loader';
 import * as glob from 'glob';
-import { resolve } from 'path';
+import { posix, resolve } from 'path';
 import { Diagnostics } from './common/diagnostics';
 import { FileUtils } from './common/file_utils';
 import { getTranslationSerializer, translationToMessage } from './common/util';
@@ -96,5 +96,5 @@ export function convertFiles({
     true
   );
 
-  FileUtils.writeFile(resolve(output), translationFile);
+  FileUtils.writeFile(posix.normalize(resolve(output)), translationFile);
 }

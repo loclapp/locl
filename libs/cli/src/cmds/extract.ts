@@ -1,9 +1,13 @@
-import * as fs from 'fs';
-import * as glob from 'glob';
-import { resolve } from 'path';
+import { readFileSync, statSync } from 'fs';
+import { sync } from 'glob';
+import { basename, extname, posix, resolve } from 'path';
 import { Diagnostics } from './common/diagnostics';
 import { FileUtils } from './common/file_utils';
-import { getTranslationSerializer, TranslationFormat } from './common/util';
+import {
+  getExtension,
+  getTranslationSerializer,
+  TranslationFormat
+} from './common/util';
 import { Extractor } from './extract/extractor';
 
 export const command = 'extract';
@@ -60,28 +64,72 @@ export function extractTranslations({
   sourceGlob: source,
   format,
   outputPath: output,
-  locale,
+  locale = 'en',
   diagnostics
 }: ExtractTranslationsOptions) {
-  console.log(
-    `Extracting translations from source "${source}" to format "${format}" and output "${output}"`
-  );
-  const filesToProcess = glob.sync(resolve(source), {
+  console.log(`Extracting translations from "${source}"`);
+  let filesToProcess = sync(resolve(source), {
     absolute: true,
     nodir: true
   });
+  filesToProcess = FileUtils.dedup(filesToProcess, /\-es(5|2015)\./, '.');
+  output = resolve(output);
+  let isFile: boolean;
+  try {
+    const stat = statSync(output);
+    isFile = stat.isFile();
+  } catch (e) {
+    isFile = !!extname(output);
+  }
+  if (isFile) {
+    makeTranslationsFile(
+      filesToProcess,
+      posix.normalize(output),
+      source,
+      format,
+      locale,
+      diagnostics
+    );
+  } else {
+    filesToProcess.forEach(file => {
+      const newFileName = posix.join(
+        output,
+        basename(file, '.js').replace(/-es(5|2015)/, '') +
+          '.' +
+          locale +
+          '.' +
+          getExtension(format)
+      );
+      makeTranslationsFile(
+        [file],
+        newFileName,
+        source,
+        format,
+        locale,
+        diagnostics
+      );
+    });
+  }
+}
 
+function makeTranslationsFile(
+  filesToProcess: string[],
+  fileOutput: string,
+  source: string,
+  format: TranslationFormat,
+  locale: string,
+  diagnostics: Diagnostics
+) {
   const extractor = new Extractor(diagnostics);
   filesToProcess.forEach(file => {
-    const contents = fs.readFileSync(file, 'utf8');
+    const contents = readFileSync(file, 'utf8');
     extractor.extractMessages(contents);
   });
 
   const serializer = getTranslationSerializer(format);
-  const translationFile = serializer.renderFile(
-    extractor.messages,
-    locale || 'en'
-  );
-
-  FileUtils.writeFile(resolve(output), translationFile);
+  if (extractor.messages.length > 0) {
+    const translationFile = serializer.renderFile(extractor.messages, locale);
+    FileUtils.writeFile(fileOutput, translationFile);
+    console.log(`  Generated file "${fileOutput}"`);
+  }
 }
