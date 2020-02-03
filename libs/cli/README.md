@@ -21,7 +21,7 @@ You can get a full list of commands with `npx locl --help`.
 You can use `locl extract` to extract translations from your ivy application:
 
 ```
-locl extract -s=dist/apps/demo/*.js -f=json -o=dist/i18n/en.json
+locl extract -s=dist/apps/demo/*.js -f=json -o=src/assets/i18n/en.json
 ```
 
 The extraction tool will find any call to `$localize` within your bundle files (in code and in templates),
@@ -41,7 +41,7 @@ Always use `--prod` or `--aot` when you build your application.
 You can use `locl convert` to convert translations from one format to another:
 
 ```
-locl convert -s=dist/i18n/fr.xlf -f=json -o=dist/i18n/fr.json
+locl convert -s=fr.xlf -f=json -o=src/assets/i18n/fr.json
 ```
 
 The conversion tool will read all translation files from the source glob and generate a file of the specified format at the specified output path.
@@ -49,7 +49,7 @@ The conversion tool will read all translation files from the source glob and gen
 Since the source glob can be used to take multiple files as input, it is possible to use this tool to aggregate multiple translation files into one:
 
 ```
-locl convert -s=dist/i18n/*.xlf -f=json -o=dist/i18n/fr.json
+locl convert -s=*.xlf -f=json -o=src/assets/i18n/fr.json
 ```
 
 It is recommended to use this tool to convert your files to json if you want to lazy load the translations at bootstrap,
