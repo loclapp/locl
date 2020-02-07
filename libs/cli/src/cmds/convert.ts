@@ -79,22 +79,26 @@ export function convertFiles({
   );
 
   const translationBundles = translationLoader.loadBundles(filesToProcess, []);
-  const messages = [];
-  translationBundles.forEach(translationBundle => {
-    const translations = translationBundle.translations;
-    messages.push(
-      ...Object.keys(translations).map(id =>
-        translationToMessage(id, translations[id])
-      )
-    );
-  });
+  if (translationBundles.length) {
+    const messages = [];
+    translationBundles.forEach(translationBundle => {
+      const translations = translationBundle.translations;
+      messages.push(
+        ...Object.keys(translations).map(id =>
+          translationToMessage(id, translations[id])
+        )
+      );
+    });
 
-  const serializer = getTranslationSerializer(format);
-  const translationFile = serializer.renderFile(
-    messages,
-    translationBundles[0].locale,
-    true
-  );
+    const serializer = getTranslationSerializer(format);
+    const translationFile = serializer.renderFile(
+      messages,
+      translationBundles[0].locale,
+      true
+    );
 
     FileUtils.writeFile(posix.normalize(output), translationFile);
+  } else {
+    diagnostics.error(`Couldn't find any file to convert.`);
+  }
 }
