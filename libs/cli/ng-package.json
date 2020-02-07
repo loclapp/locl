@@ -4,5 +4,11 @@
   "lib": {
     "entryFile": "src/index.ts"
   },
-  "whitelistedNonPeerDependencies": ["@babel/core", "find-up", "glob", "yargs"]
+  "whitelistedNonPeerDependencies": [
+    "@babel/core",
+    "chalk",
+    "find-up",
+    "glob",
+    "yargs"
+  ]
 }

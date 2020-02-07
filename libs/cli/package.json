@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.6.4",
+    "chalk": "^3.0.0",
     "find-up": "^4.1.0",
     "glob": "^7.1.2",
     "yargs": "^13.1.0"

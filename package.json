@@ -96,6 +96,7 @@
     "@nstudio/xplat": "8.1.2",
     "@types/jest": "25.1.0",
     "@types/node": "13.5.1",
+    "chalk": "^3.0.0",
     "codelyzer": "5.2.1",
     "commitizen": "4.0.3",
     "commitlint-plugin-body-content": "file:tools/commitlint-plugin-body-content",

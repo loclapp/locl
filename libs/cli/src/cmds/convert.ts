@@ -36,12 +36,12 @@ export const builder = {
 export const handler = function(options) {
   const diagnostics = new Diagnostics();
   convertFiles({
-    sourceGlob: options['s'] as string,
+    sourceGlob: resolve(options['s']),
     format: options['f'] as TranslationFormat,
-    outputPath: options['o'] as string,
+    outputPath: resolve(options['o']),
     diagnostics
   });
-  diagnostics.messages.forEach(m => console.warn(`${m.type}: ${m.message}`));
+  diagnostics.logMessages();
   process.exit(diagnostics.hasErrors ? 1 : 0);
 };
 
@@ -63,7 +63,7 @@ export function convertFiles({
   console.log(
     `Converting files from source "${source}" to format "${format}" and output "${output}"`
   );
-  const filesToProcess = glob.sync(resolve(source), {
+  const filesToProcess = glob.sync(source, {
     absolute: true,
     nodir: true
   });
@@ -96,5 +96,5 @@ export function convertFiles({
     true
   );
 
-  FileUtils.writeFile(posix.normalize(resolve(output)), translationFile);
+    FileUtils.writeFile(posix.normalize(output), translationFile);
 }
