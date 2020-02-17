@@ -8,6 +8,8 @@
     "start": "npm run postinstall.web && ng serve web",
     "build": "npm run postinstall.web && ng build web",
     "test": "npm run postinstall.web && ng test",
+    "test.cli": "ng test cli",
+    "test.core": "ng test core",
     "lint": "ng lint",
     "e2e": "npm run postinstall.web && ng e2e",
     "affected:apps": "nx affected:apps",
@@ -55,7 +57,8 @@
     "start.web": "npm run postinstall.web && ng serve web",
     "start.demo": "ng serve demo",
     "clean": "npx rimraf hooks node_modules package-lock.json dist && npm i",
-    "locl-extract": "locl extract -s=dist/apps/demo/*.js -f=json -o=dist/i18n/"
+    "locl-extract": "locl extract -s=dist/apps/demo/*.js -f=json -o=dist/i18n/",
+    "locl-convert": "locl convert -s=dist/i18n/*.xlf -f=json -o=dist/i18n/converted.json"
   },
   "private": true,
   "dependencies": {
