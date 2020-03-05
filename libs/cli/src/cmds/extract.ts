@@ -131,5 +131,8 @@ function makeTranslationsFile(
     const translationFile = serializer.renderFile(extractor.messages, locale);
     FileUtils.writeFile(fileOutput, translationFile);
     console.log(`  Generated file "${fileOutput}"`);
+  } else {
+    console.error(`No messages found. You should build the angular app without a language target for this command to work.`)
+    process.exit(1)
   }
 }
