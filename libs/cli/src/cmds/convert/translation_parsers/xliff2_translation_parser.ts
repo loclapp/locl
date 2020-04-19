@@ -7,7 +7,6 @@
  */
 import { Element, Node, XmlParser, visitAll } from '@angular/compiler';
 import { ɵMessageId, ɵParsedTranslation } from '@angular/localize';
-import { extname } from 'path';
 
 import { MessageSerializer } from '../message_serialization/message_serializer';
 import { TargetMessageRenderer } from '../message_serialization/target_message_renderer';
@@ -20,11 +19,11 @@ import {
 import {
   getAttrOrThrow,
   getAttribute,
-  parseInnerRange
+  parseInnerRange,
+  XmlTranslationParserHint,
+  canParseXml
 } from './translation_utils';
 import { BaseVisitor } from '@angular/localize/src/tools/src/translate/translation_files/base_visitor';
-
-const XLIFF_2_0_NS_REGEX = /xmlns="urn:oasis:names:tc:xliff:document:2.0"/;
 
 /**
  * A translation parser that can load translations from XLIFF 2 files.
@@ -32,9 +31,13 @@ const XLIFF_2_0_NS_REGEX = /xmlns="urn:oasis:names:tc:xliff:document:2.0"/;
  * http://docs.oasis-open.org/xliff/xliff-core/v2.0/os/xliff-core-v2.0-os.html
  *
  */
-export class Xliff2TranslationParser implements TranslationParser {
-  canParse(filePath: string, contents: string): boolean {
-    return extname(filePath) === '.xlf' && XLIFF_2_0_NS_REGEX.test(contents);
+export class Xliff2TranslationParser
+  implements TranslationParser<XmlTranslationParserHint> {
+  canParse(
+    filePath: string,
+    contents: string
+  ): XmlTranslationParserHint | false {
+    return canParseXml(filePath, contents, 'xliff', { version: '2.0' });
   }
 
   parse(filePath: string, contents: string): ParsedTranslationBundle {
@@ -68,7 +71,8 @@ class Xliff2TranslationBundleVisitor extends BaseVisitor {
     } else if (element.name === 'file') {
       this.bundle = {
         locale: parsedLocale,
-        translations: Xliff2TranslationVisitor.extractTranslations(element)
+        translations: Xliff2TranslationVisitor.extractTranslations(element),
+        diagnostics: undefined
       };
     } else {
       return visitAll(this, element.children, { parsedLocale });

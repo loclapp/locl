@@ -20,11 +20,11 @@ import {
 import {
   getAttrOrThrow,
   getAttribute,
-  parseInnerRange
+  parseInnerRange,
+  canParseXml,
+  XmlTranslationParserHint
 } from './translation_utils';
 import { ParsedTranslation } from '../translations';
-
-const XLIFF_1_2_NS_REGEX = /xmlns="urn:oasis:names:tc:xliff:document:1.2"/;
 
 /**
  * A translation parser that can load XLIFF 1.2 files.
@@ -33,9 +33,13 @@ const XLIFF_1_2_NS_REGEX = /xmlns="urn:oasis:names:tc:xliff:document:1.2"/;
  * http://docs.oasis-open.org/xliff/v1.2/xliff-profile-html/xliff-profile-html-1.2.html
  *
  */
-export class Xliff1TranslationParser implements TranslationParser {
-  canParse(filePath: string, contents: string): boolean {
-    return extname(filePath) === '.xlf' && XLIFF_1_2_NS_REGEX.test(contents);
+export class Xliff1TranslationParser
+  implements TranslationParser<XmlTranslationParserHint> {
+  canParse(
+    filePath: string,
+    contents: string
+  ): XmlTranslationParserHint | false {
+    return canParseXml(filePath, contents, 'xliff', { version: '1.2' });
   }
 
   parse(filePath: string, contents: string): ParsedTranslationBundle {
@@ -62,7 +66,8 @@ class XliffFileElementVisitor extends BaseVisitor {
     if (element.name === 'file') {
       this.bundle = {
         locale: getAttribute(element, 'target-language'),
-        translations: XliffTranslationVisitor.extractTranslations(element)
+        translations: XliffTranslationVisitor.extractTranslations(element),
+        diagnostics: undefined
       };
     } else {
       return visitAll(this, element.children);

@@ -68,15 +68,12 @@ export function convertFiles({
     nodir: true
   });
 
-  const translationLoader = new TranslationLoader(
-    [
-      new Xliff2TranslationParser(),
-      new Xliff1TranslationParser(),
-      new XtbTranslationParser(diagnostics),
-      new SimpleJsonTranslationParser()
-    ],
-    diagnostics
-  );
+  const translationLoader = new TranslationLoader([
+    new Xliff2TranslationParser(),
+    new Xliff1TranslationParser(),
+    new XtbTranslationParser(diagnostics),
+    new SimpleJsonTranslationParser()
+  ]);
 
   const translationBundles = translationLoader.loadBundles(filesToProcess, []);
   if (translationBundles.length) {

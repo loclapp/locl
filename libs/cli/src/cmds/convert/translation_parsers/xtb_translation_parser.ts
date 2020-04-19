@@ -17,22 +17,31 @@ import {
   ParsedTranslationBundle,
   TranslationParser
 } from './translation_parser';
-import { getAttrOrThrow, parseInnerRange } from './translation_utils';
+import {
+  canParseXml,
+  getAttrOrThrow,
+  parseInnerRange,
+  XmlTranslationParserHint
+} from './translation_utils';
 import { Diagnostics } from '../../common/diagnostics';
 import { BaseVisitor } from '@angular/localize/src/tools/src/translate/translation_files/base_visitor';
 
 /**
  * A translation parser that can load XB files.
  */
-export class XtbTranslationParser implements TranslationParser {
+export class XtbTranslationParser
+  implements TranslationParser<XmlTranslationParserHint> {
   constructor(private diagnostics: Diagnostics) {}
 
-  canParse(filePath: string, contents: string): boolean {
+  canParse(
+    filePath: string,
+    contents: string
+  ): XmlTranslationParserHint | false {
     const extension = extname(filePath);
-    return (
-      (extension === '.xtb' || extension === '.xmb') &&
-      contents.includes('<translationbundle')
-    );
+    if (extension !== '.xtb' && extension !== '.xmb') {
+      return false;
+    }
+    return canParseXml(filePath, contents, 'translationbundle', {});
   }
 
   parse(filePath: string, contents: string): ParsedTranslationBundle {
@@ -77,7 +86,11 @@ class XtbVisitor extends BaseVisitor {
           );
         }
         const langAttr = element.attrs.find(attr => attr.name === 'lang');
-        bundle = { locale: langAttr && langAttr.value, translations: {} };
+        bundle = {
+          locale: langAttr && langAttr.value,
+          translations: {},
+          diagnostics: undefined
+        };
         visitAll(this, element.children, bundle);
         return bundle;
 

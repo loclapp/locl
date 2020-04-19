@@ -5,7 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import { Element, LexerRange, Node, XmlParser } from '@angular/compiler';
+import {
+  Element,
+  LexerRange,
+  Node,
+  ParseError,
+  ParseErrorLevel,
+  XmlParser
+} from '@angular/compiler';
 import { TranslationParseError } from './translation_parse_error';
 
 export function getAttrOrThrow(element: Element, attrName: string): string {
@@ -51,4 +58,81 @@ function getInnerRange(element: Element): LexerRange {
     startCol: start.col,
     endPos: end.offset
   };
+}
+
+/**
+ * Create a predicate, which can be used by things like `Array.filter()`, that will match a named
+ * XML Element from a collection of XML Nodes.
+ *
+ * @param name The expected name of the element to match.
+ */
+export function isNamedElement(name: string): (node: Node) => node is Element {
+  function predicate(node: Node): node is Element {
+    return node instanceof Element && node.name === name;
+  }
+  return predicate;
+}
+
+/**
+ * This "hint" object is used to pass information from `canParse()` to `parse()` for
+ * `TranslationParser`s that expect XML contents.
+ *
+ * This saves the `parse()` method from having to re-parse the XML.
+ */
+export interface XmlTranslationParserHint {
+  element: Element;
+  errors: ParseError[];
+}
+
+/**
+ * Can this XML be parsed for translations, given the expected `rootNodeName` and expected root node
+ * `attributes` that should appear in the file.
+ *
+ * @param filePath The path to the file being checked.
+ * @param contents The contents of the file being checked.
+ * @param rootNodeName The expected name of an XML root node that should exist.
+ * @param attributes The attributes (and their values) that should appear on the root node.
+ * @returns The `XmlTranslationParserHint` object for use by `TranslationParser.parse()` if the XML
+ * document has the expected format.
+ */
+export function canParseXml(
+  filePath: string,
+  contents: string,
+  rootNodeName: string,
+  attributes: Record<string, string>
+): XmlTranslationParserHint | false {
+  const xmlParser = new XmlParser();
+  const xml = xmlParser.parse(contents, filePath);
+
+  if (
+    xml.rootNodes.length === 0 ||
+    xml.errors.some(error => error.level === ParseErrorLevel.ERROR)
+  ) {
+    return false;
+  }
+
+  const rootElements = xml.rootNodes.filter(isNamedElement(rootNodeName));
+  const rootElement = rootElements[0];
+  if (rootElement === undefined) {
+    return false;
+  }
+
+  for (const attrKey of Object.keys(attributes)) {
+    const attr = rootElement.attrs.find(a => a.name === attrKey);
+    if (attr === undefined || attr.value !== attributes[attrKey]) {
+      return false;
+    }
+  }
+
+  if (rootElements.length > 1) {
+    xml.errors.push(
+      new ParseError(
+        xml.rootNodes[1].sourceSpan,
+        'Unexpected root node. XLIFF 1.2 files should only have a single <xliff> root node.',
+        ParseErrorLevel.WARNING
+      )
+    );
+  }
+
+  return { element: rootElement, errors: xml.errors };
 }

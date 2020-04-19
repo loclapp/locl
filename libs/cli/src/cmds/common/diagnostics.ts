@@ -1,11 +1,10 @@
 import * as chalk from 'chalk';
-import { Diagnostics as _D } from '@angular/localize/src/tools/src/diagnostics';
 
 /**
  * This class is used to collect and then report warnings and errors that occur during the execution
  * of the tools.
  */
-export class Diagnostics extends _D {
+export class Diagnostics {
   readonly messages = [];
 
   get hasErrors() {
@@ -22,6 +21,22 @@ export class Diagnostics extends _D {
 
   error(message: string) {
     this.messages.push({ type: 'error', message });
+  }
+
+  formatDiagnostics(message: string): string {
+    const errors = this.messages!.filter(d => d.type === 'error').map(
+      d => ' - ' + d.message
+    );
+    const warnings = this.messages!.filter(d => d.type === 'warning').map(
+      d => ' - ' + d.message
+    );
+    if (errors.length) {
+      message += '\nERRORS:\n' + errors.join('\n');
+    }
+    if (warnings.length) {
+      message += '\nWARNINGS:\n' + warnings.join('\n');
+    }
+    return message;
   }
 
   logMessages() {

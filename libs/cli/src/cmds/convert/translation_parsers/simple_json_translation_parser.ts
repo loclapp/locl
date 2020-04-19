@@ -41,6 +41,10 @@ export class SimpleJsonTranslationParser implements TranslationParser {
       const targetMessage = translations[messageId];
       parsedTranslations[messageId] = ɵparseTranslation(targetMessage);
     }
-    return { locale: parsedLocale, translations: parsedTranslations };
+    return {
+      locale: parsedLocale,
+      translations: parsedTranslations,
+      diagnostics: undefined
+    };
   }
 }
