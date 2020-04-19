@@ -1,8 +1,8 @@
 {
   "name": "@locl/core",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "license": "AGPL-3.0-or-later",
   "peerDependencies": {
-    "@angular/core": "^9.0.0-rc.7"
+    "@angular/core": "^9.0.0"
   }
 }

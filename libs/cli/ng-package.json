@@ -5,8 +5,8 @@
     "entryFile": "src/index.ts"
   },
   "whitelistedNonPeerDependencies": [
-    "@angular/localize",
     "@babel/core",
+    "chalk",
     "find-up",
     "glob",
     "yargs"

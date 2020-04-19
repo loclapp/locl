@@ -141,7 +141,8 @@ export function translationToMessage(
   for (let i = 1; i < messageParts.length; i++) {
     const {
       text: messagePart,
-      block: placeholderName = computePlaceholderName(i)
+      block: placeholderName = translation.placeholderNames[i - 1] ||
+        computePlaceholderName(i)
     } = splitBlock(messageParts[i], messageParts.raw[i]);
     messageString += `{$${placeholderName}}${messagePart}`;
     if (translation.placeholderNames.length) {

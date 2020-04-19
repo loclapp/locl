@@ -2,18 +2,21 @@
 
 🌐 **Locl is an internationalization (i18n) tools suite for Angular.**
 
-### Core
+### Demos
+You can find a complete demo in the [apps/demo folder](apps/demo) and another one simpler [on StackBlitz](https://stackblitz.com/edit/ivy-ovy4cd) (it can take a long time to load the first time because ivy support on StackBlitz is still WIP).
 
+### Core
 A library with various utility functions to help you with \$localize.
 
 - [Documentation](libs/core)
-- [Demo on StackBlitz](https://stackblitz.com/edit/ivy-ovy4cd) (it can take a long time to load the first time because ivy support on StackBlitz is still WIP).
 
 ### CLI
-
 Dev tools to help you with `$localize` and Angular i18n.
 
 - [Documentation](libs/cli)
+
+### Roadmap
+We have a bunch of features planned on our roadmap, but you can see the features requested by the community and vote for the ones that you want the most on https://locl.hellonext.co/.
 
 ### License
 

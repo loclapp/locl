@@ -48,7 +48,7 @@ export const handler = function(options) {
     locale: options['l'] as string,
     diagnostics
   });
-  diagnostics.messages.forEach(m => console.warn(`${m.type}: ${m.message}`));
+  diagnostics.logMessages();
   process.exit(diagnostics.hasErrors ? 1 : 0);
 };
 

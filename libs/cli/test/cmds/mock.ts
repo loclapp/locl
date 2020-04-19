@@ -58,8 +58,8 @@ export const translatedXlf = `
   <file target-language="fr" datatype="plaintext">
     <body>
       <trans-unit id="3987846127133982403" datatype="html">
-        <source>It works!</source>
-        <target>Ça fonctionne</target>
+        <source>It works! <x id="INTERPOLATION"/></source>
+        <target>Ça fonctionne! <x id="INTERPOLATION"/></target>
         <note priority="1" from="description">An introduction header for this sample</note>
         <note priority="1" from="meaning">site header</note>
       </trans-unit>
@@ -80,7 +80,7 @@ export const translatedXLF2 = `<xliff version="2.0" xmlns="urn:oasis:names:tc:xl
   <file>
     <unit id="3987846127133982403">
       <segment>
-        <target>Ça fonctionne</target>
+        <target>Ça fonctionne! <ph id="1" equiv="INTERPOLATION"/></target>
       </segment>
     </unit>
     <unit id="4571727307714732203">
@@ -101,7 +101,7 @@ export const simpleTranslatedXlf = `<xliff version="1.2" xmlns="urn:oasis:names:
   <file target-language="fr" datatype="plaintext">
     <body>
       <trans-unit id="3987846127133982403" datatype="html">
-        <target>Ça fonctionne</target>
+        <target>Ça fonctionne! <x id="INTERPOLATION"/></target>
       </trans-unit>
       <trans-unit id="4571727307714732203" datatype="html">
         <target>Bienvenue à la démo de <x id="PH"/> et <x id="PH_1"/> fait pour <x id="PH_2"/>!</target>
@@ -117,7 +117,7 @@ export const simpleTranslatedXlf = `<xliff version="1.2" xmlns="urn:oasis:names:
 export const translatedJSON = `{
   "locale": "fr",
   "translations": {
-    "3987846127133982403": "Ça fonctionne",
+    "3987846127133982403": "Ça fonctionne! {$INTERPOLATION}",
     "4571727307714732203": "Bienvenue à la démo de {$PH} et {$PH_1} fait pour {$PH_2}!",
     "foo": "id personnalisé!"
   }
@@ -140,7 +140,7 @@ export const translatedXtb = `<?xml version="1.0" encoding="UTF-8"?>
 <!ELEMENT ex (#PCDATA)>
 ]>
 <translationbundle lang="fr">
-  <translation id="3987846127133982403" desc="An introduction header for this sample" meaning="site header">Ça fonctionne</translation>
+  <translation id="3987846127133982403" desc="An introduction header for this sample" meaning="site header">Ça fonctionne! <ph name="INTERPOLATION"/></translation>
   <translation id="4571727307714732203">Bienvenue à la démo de <ph name="PH"/> et <ph name="PH_1"/> fait pour <ph name="PH_2"/>!</translation>
   <translation id="foo">id personnalisé!</translation>
 </translationbundle>

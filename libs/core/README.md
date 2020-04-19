@@ -29,25 +29,31 @@ The best way to do that, is to load the translations before `bootstrapModule` ge
 Both methods return a promise with a `ParsedTranslationBundle` object containing the translations. Common usage is the following:
 
 ```ts
-// Load `$localize` onto the global scope.
+// Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
 import '@angular/localize/init';
 
 import { loadTranslations } from '@angular/localize';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { getTranslations, ParsedTranslationBundle } from '@locl/core';
-import { AppModule } from './app/app.module';
 
 getTranslations('/assets/i18n/fr.json').then(
   (data: ParsedTranslationBundle) => {
     loadTranslations(data.translations);
-    platformBrowserDynamic()
-      .bootstrapModule(AppModule)
-      .catch(err => console.error(err));
+    import('./app/app.module').then(module => {
+      platformBrowserDynamic()
+        .bootstrapModule(module.AppModule)
+        .catch(err => console.error(err));
+    });
   }
 );
 ```
 
 :warning: Do not forget to call `loadTranslations` to load the translations into `$localize`.
+
+You can notice that we are loading the app module as a dynamic import after the translations have been loaded.
+The reason for that is that, in AOT mode, `$localize` calls are defined as constants outside of the template creation.
+This means that `$localize` will try to find the translations as soon as the module is imported, which would be when the app is loaded
+in the case of a regular import. By using a dynamic import we ensure that the translations are loaded before the module.
 
 ### Util functions
 
