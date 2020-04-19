@@ -1,5 +1,6 @@
 // Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
 import '@angular/localize/init';
+import { ɵɵi18nPostprocess } from '@angular/core';
 import { loadTranslations as _loadTranslations } from '@angular/localize';
 import { ParsedTranslationBundle } from './interfaces';
 import { _global } from './global';
@@ -25,23 +26,38 @@ export const $locl = function(
 const backUpLocalize = _global.$localize;
 // override $localize until everything is loaded
 _global.$localize = $locl;
+let isLoaded = false;
 
 class LoclString extends String {
-  private readonly initParams: [TemplateStringsArray, readonly any[]];
-  private value: string;
+  private readonly initParams: [TemplateStringsArray, ...(readonly any[])];
+  private value: string = null;
+  private postProcess = false;
   constructor(
     messageParts: TemplateStringsArray,
     ...expressions: readonly any[]
   ) {
     super();
-    this.initParams = [messageParts, expressions];
+    this.initParams = [messageParts, ...expressions];
   }
 
   toString(): string {
-    if (!this.value) {
-      this.value = $localize(...this.initParams);
+    if (this.value) {
+      return this.value;
+    }
+    if (!isLoaded) {
+      return backUpLocalize(...this.initParams);
+    }
+    this.value = _global.$localize(...this.initParams);
+    if (this.postProcess) {
+      this.value = ɵɵi18nPostprocess(this.value);
+      this.postProcess = false;
     }
     return this.value;
+  }
+
+  replace(search: any, replaceValue: any): string {
+    this.postProcess = true;
+    return this as any;
   }
 }
 
@@ -52,10 +68,18 @@ class LoclString extends String {
  * `getTranslations` or `fetchTranslations`.
  */
 export function loadTranslations(
-  parsedTranslationBundle: ParsedTranslationBundle
+  parsedTranslationBundle?: ParsedTranslationBundle
 ) {
   // Restore $localize
   _global.$localize = backUpLocalize;
-  _loadTranslations(parsedTranslationBundle.translations);
-  _global.$localize.locale = parsedTranslationBundle.locale;
+  if (
+    parsedTranslationBundle?.translations &&
+    Object.keys(parsedTranslationBundle.translations).length
+  ) {
+    _loadTranslations(parsedTranslationBundle.translations);
+  }
+  if (parsedTranslationBundle?.locale) {
+    _global.$localize.locale = parsedTranslationBundle.locale;
+  }
+  isLoaded = true;
 }
