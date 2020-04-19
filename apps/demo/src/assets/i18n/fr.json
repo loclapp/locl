@@ -1,7 +1,7 @@
 {
   "locale": "fr",
   "translations": {
-    "6659618733303863373": "Ça fonctionne! {$INTERPOLATION}",
+    "143924624516046945": "Ça fonctionne! {$INTERPOLATION}",
     "6586379816467235622": "Bienvenue à la démo de {$PH} et {$PH_1} fait pour {$PH_2}!",
     "foo": "id personnalisé"
   }

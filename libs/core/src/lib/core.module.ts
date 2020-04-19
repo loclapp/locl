@@ -1,4 +1,5 @@
 import { ɵMessageId, ɵTargetMessage } from '@angular/localize';
+import { loadTranslations } from './init';
 
 export function parseTranslations(
   fileContent: string
@@ -42,7 +43,9 @@ export function getTranslations(
 
     xhr.onload = function() {
       try {
-        resolve(parseTranslations(xhr.responseText));
+        const res = parseTranslations(xhr.responseText);
+        loadTranslations(res);
+        resolve(res);
       } catch (e) {
         reject(e);
       }
@@ -87,7 +90,9 @@ export function fetchTranslations(
   return fetch(url, { method, headers })
     .then(response => response.text())
     .then((response: string) => {
-      return parseTranslations(response);
+      const res = parseTranslations(response);
+      loadTranslations(res);
+      return res;
     });
 }
 
