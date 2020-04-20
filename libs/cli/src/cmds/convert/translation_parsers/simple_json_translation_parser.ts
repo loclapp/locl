@@ -10,6 +10,7 @@ import {
   ɵParsedTranslation,
   ɵparseTranslation
 } from '@angular/localize';
+import { Diagnostics } from '../../common/diagnostics';
 import { extname } from 'path';
 import {
   ParsedTranslationBundle,
@@ -30,6 +31,8 @@ import {
  * ```
  */
 export class SimpleJsonTranslationParser implements TranslationParser {
+  constructor(private diagnostics: Diagnostics) {}
+
   canParse(filePath: string, _contents: string): boolean {
     return extname(filePath) === '.json';
   }
@@ -44,7 +47,7 @@ export class SimpleJsonTranslationParser implements TranslationParser {
     return {
       locale: parsedLocale,
       translations: parsedTranslations,
-      diagnostics: undefined
+      diagnostics: this.diagnostics
     };
   }
 }

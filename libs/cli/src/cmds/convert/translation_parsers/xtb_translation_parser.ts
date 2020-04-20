@@ -89,7 +89,7 @@ class XtbVisitor extends BaseVisitor {
         bundle = {
           locale: langAttr && langAttr.value,
           translations: {},
-          diagnostics: undefined
+          diagnostics: this.diagnostics
         };
         visitAll(this, element.children, bundle);
         return bundle;

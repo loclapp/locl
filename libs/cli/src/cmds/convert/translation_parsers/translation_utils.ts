@@ -11,8 +11,10 @@ import {
   Node,
   ParseError,
   ParseErrorLevel,
+  ParseSourceSpan,
   XmlParser
 } from '@angular/compiler';
+import { Diagnostics } from '../../common/diagnostics';
 import { TranslationParseError } from './translation_parse_error';
 
 export function getAttrOrThrow(element: Element, attrName: string): string {
@@ -135,4 +137,31 @@ export function canParseXml(
   }
 
   return { element: rootElement, errors: xml.errors };
+}
+
+/**
+ * Add an XML parser related message to the given `diagnostics` object.
+ */
+export function addParseDiagnostic(
+  diagnostics: Diagnostics,
+  sourceSpan: ParseSourceSpan,
+  message: string,
+  level: ParseErrorLevel
+): void {
+  addParseError(diagnostics, new ParseError(sourceSpan, message, level));
+}
+
+/**
+ * Copy the formatted error message from the given `parseError` object into the given `diagnostics`
+ * object.
+ */
+export function addParseError(
+  diagnostics: Diagnostics,
+  parseError: ParseError
+): void {
+  if (parseError.level === ParseErrorLevel.ERROR) {
+    diagnostics.error(parseError.toString());
+  } else {
+    diagnostics.warn(parseError.toString());
+  }
 }

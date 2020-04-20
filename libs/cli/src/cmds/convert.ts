@@ -69,10 +69,10 @@ export function convertFiles({
   });
 
   const translationLoader = new TranslationLoader([
-    new Xliff2TranslationParser(),
-    new Xliff1TranslationParser(),
+    new Xliff2TranslationParser(diagnostics),
+    new Xliff1TranslationParser(diagnostics),
     new XtbTranslationParser(diagnostics),
-    new SimpleJsonTranslationParser()
+    new SimpleJsonTranslationParser(diagnostics)
   ]);
 
   const translationBundles = translationLoader.loadBundles(filesToProcess, []);

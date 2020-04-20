@@ -7,6 +7,7 @@
  */
 import { Element, Node, XmlParser, visitAll } from '@angular/compiler';
 import { ɵMessageId, ɵParsedTranslation } from '@angular/localize';
+import { Diagnostics } from '../../common/diagnostics';
 
 import { MessageSerializer } from '../message_serialization/message_serializer';
 import { TargetMessageRenderer } from '../message_serialization/target_message_renderer';
@@ -33,6 +34,8 @@ import { BaseVisitor } from '@angular/localize/src/tools/src/translate/translati
  */
 export class Xliff2TranslationParser
   implements TranslationParser<XmlTranslationParserHint> {
+  constructor(private diagnostics: Diagnostics) {}
+
   canParse(
     filePath: string,
     contents: string
@@ -43,7 +46,10 @@ export class Xliff2TranslationParser
   parse(filePath: string, contents: string): ParsedTranslationBundle {
     const xmlParser = new XmlParser();
     const xml = xmlParser.parse(contents, filePath);
-    const bundle = Xliff2TranslationBundleVisitor.extractBundle(xml.rootNodes);
+    const bundle = Xliff2TranslationBundleVisitor.extractBundle(
+      xml.rootNodes,
+      this.diagnostics
+    );
     if (bundle === undefined) {
       throw new Error(`Unable to parse "${filePath}" as XLIFF 2.0 format.`);
     }
@@ -58,8 +64,15 @@ interface BundleVisitorContext {
 class Xliff2TranslationBundleVisitor extends BaseVisitor {
   private bundle: ParsedTranslationBundle | undefined;
 
-  static extractBundle(xliff: Node[]): ParsedTranslationBundle | undefined {
-    const visitor = new this();
+  constructor(private diagnostics: Diagnostics) {
+    super();
+  }
+
+  static extractBundle(
+    xliff: Node[],
+    diagnostics: Diagnostics
+  ): ParsedTranslationBundle | undefined {
+    const visitor = new this(diagnostics);
     visitAll(visitor, xliff, {});
     return visitor.bundle;
   }
@@ -72,7 +85,7 @@ class Xliff2TranslationBundleVisitor extends BaseVisitor {
       this.bundle = {
         locale: parsedLocale,
         translations: Xliff2TranslationVisitor.extractTranslations(element),
-        diagnostics: undefined
+        diagnostics: this.diagnostics
       };
     } else {
       return visitAll(this, element.children, { parsedLocale });
