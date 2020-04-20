@@ -34,19 +34,39 @@ export function mockFile(filePath: string[], fileContent?: string[]) {
   }
 }
 
-export const sourceXlf = `<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en" datatype="plaintext">
+export const targetXlf = (
+  lang: string,
+  isTarget: boolean
+) => `<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file ${
+    isTarget ? '' : 'source-language="' + lang + '" '
+  }target-language="${lang}" datatype="plaintext">
     <body>
       <trans-unit id="3987846127133982403" datatype="html">
-        <source>It works!</source>
+        ${
+          isTarget
+            ? ''
+            : `<source>It works!</source>
+        `
+        }<target>It works!</target>
         <note priority="1" from="description">An introduction header for this sample</note>
         <note priority="1" from="meaning">site header</note>
       </trans-unit>
       <trans-unit id="6586379816467235622" datatype="html">
-        <source>Welcome to the demo of <x id="PH"/> and <x id="PH_1"/> made for <x id="PH_2"/>!</source>
+        ${
+          isTarget
+            ? ''
+            : `<source>Welcome to the demo of <x id="PH"/> and <x id="PH_1"/> made for <x id="PH_2"/>!</source>
+        `
+        }<target>Welcome to the demo of <x id="PH"/> and <x id="PH_1"/> made for <x id="PH_2"/>!</target>
       </trans-unit>
       <trans-unit id="foo" datatype="html">
-        <source>custom id!</source>
+        ${
+          isTarget
+            ? ''
+            : `<source>custom id!</source>
+        `
+        }<target>custom id!</target>
       </trans-unit>
     </body>
   </file>

@@ -33,9 +33,11 @@ export const builder = {
       'A path to where the translation file will be written. This can be absolute or relative to the current working directory.'
   },
   l: {
-    alias: 'locale',
+    alias: ['locale', 'locales'],
     required: false,
-    describe: 'The locale for the extracted file, "en" by default.'
+    type: 'array',
+    describe:
+      'The locale for the extracted file, "en" by default. If you use multiple locales (e.g. "en fr es"), a new file will be generated for each locale'
   }
 };
 
@@ -45,7 +47,7 @@ export const handler = function(options) {
     sourceGlob: options['s'] as string,
     format: options['f'] as TranslationFormat,
     outputPath: options['o'] as string,
-    locale: options['l'] as string,
+    locales: options['l'] as string[],
     diagnostics
   });
   diagnostics.logMessages();
@@ -56,7 +58,7 @@ export interface ExtractTranslationsOptions {
   sourceGlob: string;
   format: TranslationFormat;
   outputPath: string;
-  locale?: string;
+  locales?: string[];
   diagnostics: Diagnostics;
 }
 
@@ -64,7 +66,7 @@ export function extractTranslations({
   sourceGlob: source,
   format,
   outputPath: output,
-  locale = 'en',
+  locales = ['en'],
   diagnostics
 }: ExtractTranslationsOptions) {
   console.log(`Extracting translations from "${source}"`);
@@ -74,6 +76,7 @@ export function extractTranslations({
   });
   filesToProcess = FileUtils.dedup(filesToProcess, /\-es(5|2015)\./, '.');
   output = resolve(output);
+  const generatedFiles: string[] = [];
   let isFile: boolean;
   try {
     const stat = statSync(output);
@@ -82,33 +85,55 @@ export function extractTranslations({
     isFile = !!extname(output);
   }
   if (isFile) {
-    makeTranslationsFile(
+    if (locales.length > 1) {
+      diagnostics.error(
+        `Multiple locales detected ("${locales.join(
+          ','
+        )}") but output "${output}" is not a directory`
+      );
+      return;
+    }
+    const res = makeTranslationsFile(
       filesToProcess,
       posix.normalize(output),
       source,
       format,
-      locale,
+      locales[0],
       diagnostics
     );
+    if (res) {
+      generatedFiles.push(res);
+    }
   } else {
     filesToProcess.forEach(file => {
-      const newFileName = posix.join(
-        output,
-        basename(file, '.js').replace(/-es(5|2015)/, '') +
-          '.' +
-          locale +
-          '.' +
-          getExtension(format)
-      );
-      makeTranslationsFile(
-        [file],
-        newFileName,
-        source,
-        format,
-        locale,
-        diagnostics
-      );
+      locales.forEach(locale => {
+        const newFileName = posix.join(
+          output,
+          basename(file, '.js').replace(/-es(5|2015)/, '') +
+            '.' +
+            locale +
+            '.' +
+            getExtension(format)
+        );
+        const res = makeTranslationsFile(
+          [file],
+          newFileName,
+          source,
+          format,
+          locale,
+          diagnostics
+        );
+        if (res) {
+          generatedFiles.push(res);
+        }
+      });
     });
+  }
+  if (!generatedFiles.length) {
+    diagnostics.error(
+      `No messages found. You should build the angular app without a language target for this command to work.`
+    );
+    return;
   }
 }
 
@@ -119,7 +144,7 @@ function makeTranslationsFile(
   format: TranslationFormat,
   locale: string,
   diagnostics: Diagnostics
-) {
+): string | null {
   const extractor = new Extractor(diagnostics);
   filesToProcess.forEach(file => {
     const contents = readFileSync(file, 'utf8');
@@ -128,11 +153,14 @@ function makeTranslationsFile(
 
   const serializer = getTranslationSerializer(format);
   if (extractor.messages.length > 0) {
-    const translationFile = serializer.renderFile(extractor.messages, locale);
+    const translationFile = serializer.renderFile(
+      extractor.messages,
+      locale,
+      false
+    );
     FileUtils.writeFile(fileOutput, translationFile);
     console.log(`  Generated file "${fileOutput}"`);
-  } else {
-    console.error(`No messages found. You should build the angular app without a language target for this command to work.`)
-    process.exit(1)
+    return fileOutput;
   }
+  return null;
 }

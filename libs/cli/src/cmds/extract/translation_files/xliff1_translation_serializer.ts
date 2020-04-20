@@ -16,21 +16,23 @@ export class Xliff1TranslationSerializer implements TranslationSerializer {
     isTarget = false
   ): string {
     const xml = new XmlFile();
-    const tagName = isTarget ? 'target' : 'source';
     xml.startTag('xliff', {
       version: '1.2',
       xmlns: 'urn:oasis:names:tc:xliff:document:1.2'
     });
-    xml.startTag('file', {
-      [isTarget ? 'target-language' : 'source-language']: locale,
+    const fileAttrs = {
+      ['source-language']: isTarget ? undefined : locale,
+      ['target-language']: locale,
       datatype: 'plaintext'
-    });
+    };
+    xml.startTag('file', fileAttrs);
     xml.startTag('body');
     messages.forEach(message => {
       xml.startTag('trans-unit', { id: message.messageId, datatype: 'html' });
-      xml.startTag(tagName, {}, { preserveWhitespace: true });
-      this.renderMessage(xml, message);
-      xml.endTag(tagName, { preserveWhitespace: false });
+      if (!isTarget) {
+        this.generateMessageTag(xml, 'source', message);
+      }
+      this.generateMessageTag(xml, 'target', message);
       if (message.description) {
         this.renderNote(xml, 'description', message.description);
       }
@@ -43,6 +45,16 @@ export class Xliff1TranslationSerializer implements TranslationSerializer {
     xml.endTag('file');
     xml.endTag('xliff');
     return xml.toString();
+  }
+
+  private generateMessageTag(
+    xml: XmlFile,
+    tagName: string,
+    message: ɵParsedMessage
+  ) {
+    xml.startTag(tagName, {}, { preserveWhitespace: true });
+    this.renderMessage(xml, message);
+    xml.endTag(tagName, { preserveWhitespace: false });
   }
 
   private renderMessage(xml: XmlFile, message: ɵParsedMessage): void {

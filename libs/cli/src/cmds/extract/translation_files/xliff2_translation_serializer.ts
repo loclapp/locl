@@ -16,7 +16,6 @@ export class Xliff2TranslationSerializer implements TranslationSerializer {
     isTarget = false
   ): string {
     const xml = new XmlFile();
-    const tagName = isTarget ? 'target' : 'source';
     xml.startTag('xliff', {
       version: '2.0',
       xmlns: 'urn:oasis:names:tc:xliff:document:2.0',
@@ -37,15 +36,26 @@ export class Xliff2TranslationSerializer implements TranslationSerializer {
         xml.endTag('notes');
       }
       xml.startTag('segment');
-      xml.startTag(tagName, {}, { preserveWhitespace: true });
-      this.renderMessage(xml, message);
-      xml.endTag(tagName, { preserveWhitespace: false });
+      if (!isTarget) {
+        this.generateMessageTag(xml, 'source', message);
+      }
+      this.generateMessageTag(xml, 'target', message);
       xml.endTag('segment');
       xml.endTag('unit');
     });
     xml.endTag('file');
     xml.endTag('xliff');
     return xml.toString();
+  }
+
+  private generateMessageTag(
+    xml: XmlFile,
+    tagName: string,
+    message: ɵParsedMessage
+  ) {
+    xml.startTag(tagName, {}, { preserveWhitespace: true });
+    this.renderMessage(xml, message);
+    xml.endTag(tagName, { preserveWhitespace: false });
   }
 
   private renderMessage(xml: XmlFile, message: ɵParsedMessage): void {

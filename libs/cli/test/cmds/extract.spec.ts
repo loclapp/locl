@@ -1,6 +1,6 @@
 import { extractTranslations } from '@locl/cli';
 import { Diagnostics } from '@locl/cli/src/cmds/common/diagnostics';
-import { mockFile, sourceXlf } from '@locl/cli/test/cmds/mock';
+import { mockFile, targetXlf } from '@locl/cli/test/cmds/mock';
 import { FileUtils } from '../../src/cmds/common/file_utils';
 
 describe('extract', () => {
@@ -15,7 +15,7 @@ describe('extract', () => {
       diagnostics: new Diagnostics()
     });
 
-    expect(spy).toHaveBeenCalledWith('/i18/en.xlf', sourceXlf);
+    expect(spy).toHaveBeenCalledWith('/i18/en.xlf', targetXlf('en', false));
   });
 
   it('should create files automatically if output is a folder', () => {
@@ -29,7 +29,35 @@ describe('extract', () => {
       diagnostics: new Diagnostics()
     });
 
-    expect(spy).toHaveBeenCalledWith('/i18/main.en.xlf', sourceXlf);
+    expect(spy).toHaveBeenCalledWith(
+      '/i18/main.en.xlf',
+      targetXlf('en', false)
+    );
+  });
+
+  it('should create multiple files if output is a folder and locales is an array', () => {
+    mockFile(['main-es2015.js', '/i18'], [mainEs2015]);
+    const spy = spyOn(FileUtils, 'writeFile');
+
+    extractTranslations({
+      format: 'xlf',
+      sourceGlob: 'main-es2015.js',
+      outputPath: '/i18',
+      locales: ['en', 'fr'],
+      diagnostics: new Diagnostics()
+    });
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      '/i18/main.en.xlf',
+      targetXlf('en', false)
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      '/i18/main.fr.xlf',
+      targetXlf('fr', false)
+    );
   });
 });
 
