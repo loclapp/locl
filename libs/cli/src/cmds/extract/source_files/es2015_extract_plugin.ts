@@ -8,6 +8,7 @@
 import { ɵParsedMessage, ɵparseMessage } from '@angular/localize';
 import { NodePath, PluginObj } from '@babel/core';
 import { TaggedTemplateExpression } from '@babel/types';
+import { ParsedMessageLegacy } from '../../../cmds/common/util';
 
 import {
   isGlobalIdentifier,
@@ -17,7 +18,7 @@ import {
 import { Diagnostics } from '../../common/diagnostics';
 
 export function makeEs2015ExtractPlugin(
-  messages: ɵParsedMessage[],
+  messages: (ɵParsedMessage | ParsedMessageLegacy)[],
   diagnostics: Diagnostics,
   localizeName = '$localize'
 ): PluginObj {
@@ -29,11 +30,18 @@ export function makeEs2015ExtractPlugin(
           const messageParts = unwrapMessagePartsFromTemplateLiteral(
             path.node.quasi.quasis
           );
-          const message = ɵparseMessage(
+          const message: ɵParsedMessage | ParsedMessageLegacy = ɵparseMessage(
             messageParts,
             path.node.quasi.expressions
           );
-          if (!messages.find(msg => msg.messageId === message.messageId)) {
+          if (
+            !messages.find((msg: any) =>
+              message.id
+                ? msg.id === message.id
+                : msg.messageId ===
+                  ((<unknown>message) as ParsedMessageLegacy).messageId
+            )
+          ) {
             messages.push(message);
           }
         }

@@ -8,6 +8,7 @@
 import { ɵParsedMessage, ɵparseMessage } from '@angular/localize';
 import { NodePath, PluginObj } from '@babel/core';
 import { CallExpression } from '@babel/types';
+import { ParsedMessageLegacy } from '../../../cmds/common/util';
 
 import {
   isGlobalIdentifier,
@@ -18,7 +19,7 @@ import {
 import { Diagnostics } from '../../common/diagnostics';
 
 export function makeEs5ExtractPlugin(
-  messages: ɵParsedMessage[],
+  messages: (ɵParsedMessage | ParsedMessageLegacy)[],
   diagnostics: Diagnostics,
   localizeName = '$localize'
 ): PluginObj {
@@ -34,8 +35,18 @@ export function makeEs5ExtractPlugin(
           const expressions = unwrapSubstitutionsFromLocalizeCall(
             callPath.node
           );
-          const message = ɵparseMessage(messageParts, expressions);
-          if (!messages.find(msg => msg.messageId === message.messageId)) {
+          const message: ɵParsedMessage | ParsedMessageLegacy = ɵparseMessage(
+            messageParts,
+            expressions
+          );
+          if (
+            !messages.find((msg: any) =>
+              message.id
+                ? msg.id === message.id
+                : msg.messageId ===
+                  ((<unknown>message) as ParsedMessageLegacy).messageId
+            )
+          ) {
             messages.push(message);
           }
         }

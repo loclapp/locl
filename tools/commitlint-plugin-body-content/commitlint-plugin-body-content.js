@@ -25,7 +25,9 @@ module.exports = {
         }
       }
 
-      const hasRegexp = body.search(value) !== -1;
+      const hasRegexp = body
+        .split(/[\r\n]+/)
+        .find(str => str.search(value) !== -1);
 
       return [
         negated ? !hasRegexp : hasRegexp,

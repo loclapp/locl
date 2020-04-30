@@ -3,7 +3,7 @@ import { TranslationSerializer } from '../extract/translation_files/translation_
 import { Xliff1TranslationSerializer } from '../extract/translation_files/xliff1_translation_serializer';
 import { Xliff2TranslationSerializer } from '../extract/translation_files/xliff2_translation_serializer';
 import { XmbTranslationSerializer } from '../extract/translation_files/xmb_translation_serializer';
-import { ɵParsedMessage } from '@angular/localize';
+import { ɵMessageId, ɵParsedMessage } from '@angular/localize';
 import { ParsedTranslation } from '../convert/translations';
 import { XtbTranslationSerializer } from '../extract/translation_files/xtb_translation_serializer';
 
@@ -128,7 +128,7 @@ function computePlaceholderName(index: number) {
 }
 
 export function translationToMessage(
-  messageId: string,
+  id: string,
   translation: ParsedTranslation
 ): ɵParsedMessage {
   const messageParts = translation.messageParts;
@@ -136,7 +136,7 @@ export function translationToMessage(
   const cleanedMessageParts: string[] = [messageParts[0]];
   const substitutions: { [placeholderName: string]: any } = {};
   const placeholderNames: string[] = [];
-  let messageString = messageParts[0];
+  let text = messageParts[0];
 
   for (let i = 1; i < messageParts.length; i++) {
     const {
@@ -144,7 +144,7 @@ export function translationToMessage(
       block: placeholderName = translation.placeholderNames[i - 1] ||
         computePlaceholderName(i)
     } = splitBlock(messageParts[i], messageParts.raw[i]);
-    messageString += `{$${placeholderName}}${messagePart}`;
+    text += `{$${placeholderName}}${messagePart}`;
     if (translation.placeholderNames.length) {
       substitutions[placeholderName] = translation.placeholderNames[i - 1];
     }
@@ -153,13 +153,55 @@ export function translationToMessage(
   }
 
   return {
-    messageId,
+    id,
     legacyIds,
     substitutions,
-    messageString,
+    text,
     meaning: translation.meaning || '',
     description: translation.description || '',
     messageParts: cleanedMessageParts,
     placeholderNames
   };
+}
+
+export interface ParsedMessageLegacy {
+  /**
+   * The key used to look up the appropriate translation target.
+   */
+  messageId: ɵMessageId;
+  /**
+   * Legacy message ids, if provided.
+   *
+   * In legacy message formats the message id can only be computed directly from the original
+   * template source.
+   *
+   * Since this information is not available in `$localize` calls, the legacy message ids may be
+   * attached by the compiler to the `$localize` metablock so it can be used if needed at the point
+   * of translation if the translations are encoded using the legacy message id.
+   */
+  legacyIds: ɵMessageId[];
+  /**
+   * A mapping of placeholder names to substitution values.
+   */
+  substitutions: Record<string, any>;
+  /**
+   * A human readable rendering of the message
+   */
+  messageString: string;
+  /**
+   * The meaning of the `message`, used to distinguish identical `messageString`s.
+   */
+  meaning: string;
+  /**
+   * The description of the `message`, used to aid translation.
+   */
+  description: string;
+  /**
+   * The static parts of the message.
+   */
+  messageParts: string[];
+  /**
+   * The names of the placeholders that will be replaced with substitutions.
+   */
+  placeholderNames: string[];
 }

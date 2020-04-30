@@ -24,7 +24,8 @@ export function makeParsedTranslation(
     messageParts: makeTemplateObject(messageParts, messageParts),
     placeholderNames,
     description,
-    meaning
+    meaning,
+    text: ''
   };
 }
 

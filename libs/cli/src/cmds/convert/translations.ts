@@ -1,9 +1,10 @@
 import { ɵMessageId } from '@angular/localize';
+import { ɵParsedTranslation } from '@angular/localize/private';
 
 /**
  * A translation message that has been processed to extract the message parts and placeholders.
  */
-export interface ParsedTranslation {
+export interface ParsedTranslation extends ɵParsedTranslation {
   messageParts: TemplateStringsArray;
   placeholderNames: string[];
   description?: string;

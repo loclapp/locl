@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import { ɵParsedMessage } from '@angular/localize';
+import { ParsedMessageLegacy } from '../../../cmds/common/util';
 import { TranslationSerializer } from './translation_serializer';
 import { XmlFile } from './xml_file';
 
 export class Xliff1TranslationSerializer implements TranslationSerializer {
   renderFile(
-    messages: ɵParsedMessage[],
+    messages: (ɵParsedMessage | ParsedMessageLegacy)[],
     locale: string,
     isTarget = false
   ): string {
@@ -28,7 +29,12 @@ export class Xliff1TranslationSerializer implements TranslationSerializer {
     xml.startTag('file', fileAttrs);
     xml.startTag('body');
     messages.forEach(message => {
-      xml.startTag('trans-unit', { id: message.messageId, datatype: 'html' });
+      xml.startTag('trans-unit', {
+        id:
+          (message as ɵParsedMessage).id ||
+          (message as ParsedMessageLegacy).messageId,
+        datatype: 'html'
+      });
       if (!isTarget) {
         this.generateMessageTag(xml, 'source', message);
       }
@@ -50,14 +56,17 @@ export class Xliff1TranslationSerializer implements TranslationSerializer {
   private generateMessageTag(
     xml: XmlFile,
     tagName: string,
-    message: ɵParsedMessage
+    message: ɵParsedMessage | ParsedMessageLegacy
   ) {
     xml.startTag(tagName, {}, { preserveWhitespace: true });
     this.renderMessage(xml, message);
     xml.endTag(tagName, { preserveWhitespace: false });
   }
 
-  private renderMessage(xml: XmlFile, message: ɵParsedMessage): void {
+  private renderMessage(
+    xml: XmlFile,
+    message: ɵParsedMessage | ParsedMessageLegacy
+  ): void {
     xml.text(message.messageParts[0]);
     for (let i = 1; i < message.messageParts.length; i++) {
       xml.startTag(

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import { ɵParsedMessage } from '@angular/localize';
+import { ParsedMessageLegacy } from '../../../cmds/common/util';
 import { TranslationSerializer } from './translation_serializer';
 import { XmlFile } from './xml_file';
 
@@ -30,14 +31,16 @@ const DOCTYPE = `<!ELEMENT messagebundle (msg)*>
 <!ELEMENT ex (#PCDATA)>`;
 
 export class XmbTranslationSerializer implements TranslationSerializer {
-  renderFile(messages: ɵParsedMessage[]): string {
+  renderFile(messages: (ɵParsedMessage | ParsedMessageLegacy)[]): string {
     const xml = new XmlFile();
     xml.startTag('messagebundle');
     messages.forEach(message => {
       xml.startTag(
         'msg',
         {
-          id: message.messageId,
+          id:
+            (message as ɵParsedMessage).id ||
+            (message as ParsedMessageLegacy).messageId,
           desc: message.description,
           meaning: message.meaning
         },
@@ -50,7 +53,10 @@ export class XmbTranslationSerializer implements TranslationSerializer {
     return xml.toString();
   }
 
-  private renderMessage(xml: XmlFile, message: ɵParsedMessage): void {
+  private renderMessage(
+    xml: XmlFile,
+    message: ɵParsedMessage | ParsedMessageLegacy
+  ): void {
     xml.text(message.messageParts[0]);
     for (let i = 1; i < message.messageParts.length; i++) {
       xml.startTag(
