@@ -1,5 +1,4 @@
-import { ɵMessageId } from '@angular/localize';
-import { ɵParsedTranslation } from '@angular/localize/private';
+import { ɵMessageId, ɵParsedTranslation } from '@angular/localize';
 
 /**
  * A translation message that has been processed to extract the message parts and placeholders.
