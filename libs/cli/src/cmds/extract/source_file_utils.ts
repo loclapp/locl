@@ -9,11 +9,10 @@ import {
   ɵParsedTranslation,
   ɵisMissingTranslationError,
   ɵmakeTemplateObject,
-  ɵtranslate
+  ɵtranslate,
 } from '@angular/localize';
 import { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
-import { ParsedTranslation } from '@angular/localize/src/utils';
 import { Diagnostics } from '../common/diagnostics';
 
 /**
@@ -21,9 +20,9 @@ import { Diagnostics } from '../common/diagnostics';
  * @param expression The expression to check.
  */
 export function isNamedIdentifier(
-  expression: NodePath,
+  expression: NodePath<any>,
   name: string
-): expression is NodePath {
+): expression is NodePath<t.Identifier> {
   return expression.isIdentifier() && expression.node.name === name;
 }
 
@@ -147,7 +146,7 @@ export function unwrapSubstitutionsFromLocalizeCall(
   const expressions = call.arguments.splice(1);
   if (!isArrayOfExpressions(expressions)) {
     const badExpression = expressions.find(
-      expression => !t.isExpression(expression)
+      (expression) => !t.isExpression(expression)
     )!;
     throw new BabelParseError(
       badExpression,
@@ -160,18 +159,18 @@ export function unwrapSubstitutionsFromLocalizeCall(
 export function unwrapMessagePartsFromTemplateLiteral(
   elements: t.TemplateElement[]
 ): TemplateStringsArray {
-  const cooked = elements.map(q => {
+  const cooked = elements.map((q) => {
     if (q.value.cooked === undefined) {
       throw new BabelParseError(
         q,
         `Unexpected undefined message part in "${elements.map(
-          eq => eq.value.cooked
+          (eq) => eq.value.cooked
         )}"`
       );
     }
     return q.value.cooked;
   });
-  const raw = elements.map(q => q.value.raw);
+  const raw = elements.map((q) => q.value.raw);
   return ɵmakeTemplateObject(cooked, raw);
 }
 
@@ -239,7 +238,7 @@ export function unwrapLazyLoadHelperCall(
       'Missing declaration for lazy-load helper function'
     );
   }
-  const lazyLoadFn = lazyLoadBinding.path;
+  const lazyLoadFn = lazyLoadBinding.path as NodePath<t.FunctionDeclaration>;
   if (!lazyLoadFn.isFunctionDeclaration()) {
     throw new BabelParseError(
       (lazyLoadFn as any).node,
@@ -267,7 +266,9 @@ export function unwrapLazyLoadHelperCall(
         'Unexpected helper return value declaration (expected a variable declaration).'
       );
     }
-    const initializer = declaration.path.get('init');
+    const initializer = declaration.path.get('init') as NodePath<
+      t.CallExpression
+    >;
     if (!initializer.isCallExpression()) {
       throw new BabelParseError(
         declaration.path.node,
@@ -323,7 +324,7 @@ export function isStringLiteralArray(
 ): node is t.Expression & { elements: t.StringLiteral[] } {
   return (
     t.isArrayExpression(node) &&
-    node.elements.every(element => t.isStringLiteral(element))
+    node.elements.every((element) => t.isStringLiteral(element))
   );
 }
 
@@ -332,7 +333,7 @@ export function isStringLiteralArray(
  * @param nodes The nodes to test.
  */
 export function isArrayOfExpressions(nodes: t.Node[]): nodes is t.Expression[] {
-  return nodes.every(element => t.isExpression(element));
+  return nodes.every((element) => t.isExpression(element));
 }
 
 /** Options that affect how the `makeEsXXXTranslatePlugin()` functions work. */
@@ -373,7 +374,7 @@ export function translate(
           e.parsedMessage.messageParts,
           e.parsedMessage.messageParts
         ),
-        substitutions
+        substitutions,
       ];
     } else {
       diagnostics.error(e.message);
