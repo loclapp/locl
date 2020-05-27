@@ -15,7 +15,7 @@ import { _global } from './global';
  * @param messageParts
  * @param expressions
  */
-export const $locl = function(
+export const $locl = function (
   messageParts: TemplateStringsArray,
   ...expressions: readonly any[]
 ) {
@@ -32,6 +32,7 @@ class LoclString extends String {
   private readonly initParams: [TemplateStringsArray, ...(readonly any[])];
   private value: string = null;
   private postProcess = false;
+
   constructor(
     messageParts: TemplateStringsArray,
     ...expressions: readonly any[]
@@ -53,6 +54,10 @@ class LoclString extends String {
       this.postProcess = false;
     }
     return this.value;
+  }
+
+  valueOf(): string {
+    return this.toString();
   }
 
   replace(search: any, replaceValue: any): string {
