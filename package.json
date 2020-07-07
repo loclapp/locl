@@ -108,7 +108,7 @@
     "cypress": "3.8.3",
     "cz-lerna-changelog": "2.0.2",
     "dotenv": "8.2.0",
-    "electron": "7.1.10",
+    "electron": "7.2.4",
     "electron-builder": "22.3.3",
     "electron-installer-dmg": "3.0.0",
     "electron-packager": "14.2.0",
