@@ -4,20 +4,20 @@ function getErrorMsg(negated, value, types) {
   return message.default([
     'body',
     negated ? 'may not' : 'must',
-    `contain [${value}] for scopes [${types.join(', ')}]`
+    `contain [${value}] for scopes [${types.join(', ')}]`,
   ]);
 }
 
 module.exports = {
   rules: {
-    'body-content': function(parsed, when, params) {
+    'body-content': function (parsed, when, params) {
       const body = parsed.body;
+      const footer = parsed.footer;
       const type = parsed.type;
       const negated = when === 'never';
       const value = params[0];
       const types = params[1];
-
-      if (!body) {
+      if (!body && !footer) {
         if (negated || types.indexOf(type) === -1) {
           return [true];
         } else {
@@ -25,14 +25,18 @@ module.exports = {
         }
       }
 
-      const hasRegexp = body
-        .split(/[\r\n]+/)
-        .find(str => str.search(value) !== -1);
+      const hasRegexp =
+        (body
+          ? body.split(/[\r\n]+/).find((str) => str.search(value) !== -1)
+          : false) ||
+        (footer
+          ? footer.split(/[\r\n]+/).find((str) => str.search(value) !== -1)
+          : false);
 
       return [
         negated ? !hasRegexp : hasRegexp,
-        getErrorMsg(negated, value, types)
+        getErrorMsg(negated, value, types),
       ];
-    }
-  }
+    },
+  },
 };

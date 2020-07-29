@@ -12,8 +12,9 @@ import {
   ParseError,
   ParseErrorLevel,
   ParseSourceSpan,
-  XmlParser
+  XmlParser,
 } from '@angular/compiler';
+import { ParseAnalysis } from './translation_parser';
 import { Diagnostics } from '../../common/diagnostics';
 import { TranslationParseError } from './translation_parse_error';
 
@@ -32,7 +33,7 @@ export function getAttribute(
   element: Element,
   attrName: string
 ): string | undefined {
-  const attr = element.attrs.find(a => a.name === attrName);
+  const attr = element.attrs.find((a) => a.name === attrName);
   return attr !== undefined ? attr.value : undefined;
 }
 
@@ -45,7 +46,7 @@ export function parseInnerRange(element: Element): Node[] {
   );
   if (xml.errors.length) {
     throw xml.errors
-      .map(e => new TranslationParseError(e.span, e.msg).toString())
+      .map((e) => new TranslationParseError(e.span, e.msg).toString())
       .join('\n');
   }
   return xml.rootNodes;
@@ -58,7 +59,7 @@ function getInnerRange(element: Element): LexerRange {
     startPos: start.offset,
     startLine: start.line,
     startCol: start.col,
-    endPos: end.offset
+    endPos: end.offset,
   };
 }
 
@@ -102,27 +103,38 @@ export function canParseXml(
   contents: string,
   rootNodeName: string,
   attributes: Record<string, string>
-): XmlTranslationParserHint | false {
+): ParseAnalysis<XmlTranslationParserHint> {
+  const diagnostics = new Diagnostics();
   const xmlParser = new XmlParser();
   const xml = xmlParser.parse(contents, filePath);
 
   if (
     xml.rootNodes.length === 0 ||
-    xml.errors.some(error => error.level === ParseErrorLevel.ERROR)
+    xml.errors.some((error) => error.level === ParseErrorLevel.ERROR)
   ) {
-    return false;
+    xml.errors.forEach((e) => addParseError(diagnostics, e));
+    return { canParse: false, diagnostics };
   }
 
   const rootElements = xml.rootNodes.filter(isNamedElement(rootNodeName));
   const rootElement = rootElements[0];
   if (rootElement === undefined) {
-    return false;
+    diagnostics.warn(
+      `The XML file does not contain a <${rootNodeName}> root node.`
+    );
+    return { canParse: false, diagnostics };
   }
 
   for (const attrKey of Object.keys(attributes)) {
-    const attr = rootElement.attrs.find(a => a.name === attrKey);
+    const attr = rootElement.attrs.find((at) => at.name === attrKey);
     if (attr === undefined || attr.value !== attributes[attrKey]) {
-      return false;
+      addParseDiagnostic(
+        diagnostics,
+        rootElement.sourceSpan,
+        `The <${rootNodeName}> node does not have the required attribute: ${attrKey}="${attributes[attrKey]}".`,
+        ParseErrorLevel.WARNING
+      );
+      return { canParse: false, diagnostics };
     }
   }
 
@@ -136,7 +148,11 @@ export function canParseXml(
     );
   }
 
-  return { element: rootElement, errors: xml.errors };
+  return {
+    canParse: true,
+    diagnostics,
+    hint: { element: rootElement, errors: xml.errors },
+  };
 }
 
 /**

@@ -14,14 +14,15 @@ import { TargetMessageRenderer } from '../message_serialization/target_message_r
 
 import { TranslationParseError } from './translation_parse_error';
 import {
+  ParseAnalysis,
   ParsedTranslationBundle,
-  TranslationParser
+  TranslationParser,
 } from './translation_parser';
 import {
   canParseXml,
   getAttrOrThrow,
   parseInnerRange,
-  XmlTranslationParserHint
+  XmlTranslationParserHint,
 } from './translation_utils';
 import { Diagnostics } from '../../common/diagnostics';
 import { BaseVisitor } from '@angular/localize/src/tools/src/translate/translation_files/base_visitor';
@@ -37,9 +38,19 @@ export class XtbTranslationParser
     filePath: string,
     contents: string
   ): XmlTranslationParserHint | false {
+    const result = this.analyze(filePath, contents);
+    return result.canParse && result.hint;
+  }
+
+  analyze(
+    filePath: string,
+    contents: string
+  ): ParseAnalysis<XmlTranslationParserHint> {
     const extension = extname(filePath);
     if (extension !== '.xtb' && extension !== '.xmb') {
-      return false;
+      const diagnostics = new Diagnostics();
+      this.diagnostics.warn('Must have xtb or xmb extension.');
+      return { canParse: false, diagnostics };
     }
     return canParseXml(filePath, contents, 'translationbundle', {});
   }
@@ -85,11 +96,11 @@ class XtbVisitor extends BaseVisitor {
             '<translationbundle> elements can not be nested'
           );
         }
-        const langAttr = element.attrs.find(attr => attr.name === 'lang');
+        const langAttr = element.attrs.find((attr) => attr.name === 'lang');
         bundle = {
           locale: langAttr && langAttr.value,
           translations: {},
-          diagnostics: this.diagnostics
+          diagnostics: this.diagnostics,
         };
         visitAll(this, element.children, bundle);
         return bundle;
@@ -132,7 +143,7 @@ class XtbVisitor extends BaseVisitor {
 function serializeTargetMessage(source: Element): ɵParsedTranslation {
   const serializer = new MessageSerializer(new TargetMessageRenderer(), {
     inlineElements: [],
-    placeholder: { elementName: 'ph', nameAttribute: 'name' }
+    placeholder: { elementName: 'ph', nameAttribute: 'name' },
   });
   return serializer.serialize(parseInnerRange(source));
 }

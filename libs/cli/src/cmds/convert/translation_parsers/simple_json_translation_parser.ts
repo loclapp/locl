@@ -8,13 +8,14 @@
 import {
   ɵMessageId,
   ɵParsedTranslation,
-  ɵparseTranslation
+  ɵparseTranslation,
 } from '@angular/localize';
 import { Diagnostics } from '../../common/diagnostics';
 import { extname } from 'path';
 import {
+  ParseAnalysis,
   ParsedTranslationBundle,
-  TranslationParser
+  TranslationParser,
 } from './translation_parser';
 
 /**
@@ -30,11 +31,43 @@ import {
  * }
  * ```
  */
-export class SimpleJsonTranslationParser implements TranslationParser {
+export class SimpleJsonTranslationParser implements TranslationParser<Object> {
   constructor(private diagnostics: Diagnostics) {}
 
-  canParse(filePath: string, _contents: string): boolean {
-    return extname(filePath) === '.json';
+  canParse(filePath: string, contents: string): Object | false {
+    const result = this.analyze(filePath, contents);
+    return result.canParse && result.hint;
+  }
+
+  analyze(filePath: string, contents: string): ParseAnalysis<Object> {
+    const diagnostics = new Diagnostics();
+    if (extname(filePath) !== '.json') {
+      diagnostics.warn('File does not have .json extension.');
+      return { canParse: false, diagnostics };
+    }
+    try {
+      const json = JSON.parse(contents);
+      if (json.locale === undefined) {
+        diagnostics.warn('Required "locale" property missing.');
+        return { canParse: false, diagnostics };
+      }
+      if (typeof json.locale !== 'string') {
+        diagnostics.warn('The "locale" property is not a string.');
+        return { canParse: false, diagnostics };
+      }
+      if (json.translations === undefined) {
+        diagnostics.warn('Required "translations" property missing.');
+        return { canParse: false, diagnostics };
+      }
+      if (typeof json.translations !== 'object') {
+        diagnostics.warn('The "translations" is not an object.');
+        return { canParse: false, diagnostics };
+      }
+      return { canParse: true, diagnostics, hint: json };
+    } catch (e) {
+      diagnostics.warn('File is not valid JSON.');
+      return { canParse: false, diagnostics };
+    }
   }
 
   parse(_filePath: string, contents: string): ParsedTranslationBundle {
@@ -47,7 +80,7 @@ export class SimpleJsonTranslationParser implements TranslationParser {
     return {
       locale: parsedLocale,
       translations: parsedTranslations,
-      diagnostics: this.diagnostics
+      diagnostics: this.diagnostics,
     };
   }
 }

@@ -20,6 +20,29 @@ export interface ParsedTranslationBundle {
 }
 
 /**
+ * Indicates that a parser can parse a given file, with a hint that can be used to speed up actual
+ * parsing.
+ */
+export interface CanParseAnalysis<Hint> {
+  canParse: true;
+  diagnostics: Diagnostics;
+  hint: Hint;
+}
+
+/**
+ * Indicates that a parser cannot parse a given file with diagnostics as why this is.
+ * */
+export interface CannotParseAnalysis {
+  canParse: false;
+  diagnostics: Diagnostics;
+}
+
+/**
+ * Information about whether a `TranslationParser` can parse a given file.
+ */
+export type ParseAnalysis<Hint> = CanParseAnalysis<Hint> | CannotParseAnalysis;
+
+/**
  * Implement this interface to provide a class that can parse the contents of a translation file.
  */
 export interface TranslationParser<Hint = true> {
@@ -40,4 +63,13 @@ export interface TranslationParser<Hint = true> {
    * have been provided as the return result from calling `canParse()`.
    */
   canParse(filePath: string, contents: string, hint: Hint): Hint | false;
+
+  /**
+   * Analyze the file to see if this parser can parse the given file.
+   *
+   * @param filePath The absolute path to the translation file.
+   * @param contents The contents of the translation file.
+   * @returns Information indicating whether the file can be parsed by this parser.
+   */
+  analyze(filePath: string, contents: string): ParseAnalysis<Hint>;
 }

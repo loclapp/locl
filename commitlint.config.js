@@ -6,5 +6,6 @@ module.exports = {
   plugins: ['commitlint-plugin-body-content'],
   rules: {
     'body-content': [2, 'always', ['affects:', ['fix', 'feat', 'perf']]],
+    'footer-max-line-length': [0],
   },
 };

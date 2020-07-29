@@ -14,15 +14,16 @@ import { TargetMessageRenderer } from '../message_serialization/target_message_r
 
 import { TranslationParseError } from './translation_parse_error';
 import {
+  ParseAnalysis,
   ParsedTranslationBundle,
-  TranslationParser
+  TranslationParser,
 } from './translation_parser';
 import {
   getAttrOrThrow,
   getAttribute,
   parseInnerRange,
   XmlTranslationParserHint,
-  canParseXml
+  canParseXml,
 } from './translation_utils';
 import { BaseVisitor } from '@angular/localize/src/tools/src/translate/translation_files/base_visitor';
 
@@ -40,6 +41,14 @@ export class Xliff2TranslationParser
     filePath: string,
     contents: string
   ): XmlTranslationParserHint | false {
+    const result = this.analyze(filePath, contents);
+    return result.canParse && result.hint;
+  }
+
+  analyze(
+    filePath: string,
+    contents: string
+  ): ParseAnalysis<XmlTranslationParserHint> {
     return canParseXml(filePath, contents, 'xliff', { version: '2.0' });
   }
 
@@ -85,7 +94,7 @@ class Xliff2TranslationBundleVisitor extends BaseVisitor {
       this.bundle = {
         locale: parsedLocale,
         translations: Xliff2TranslationVisitor.extractTranslations(element),
-        diagnostics: this.diagnostics
+        diagnostics: this.diagnostics,
       };
     } else {
       return visitAll(this, element.children, { parsedLocale });
@@ -145,13 +154,13 @@ function serializeTargetMessage(source: Element): ɵParsedTranslation {
     placeholder: {
       elementName: 'ph',
       nameAttribute: 'equiv',
-      bodyAttribute: 'disp'
+      bodyAttribute: 'disp',
     },
     placeholderContainer: {
       elementName: 'pc',
       startAttribute: 'equivStart',
-      endAttribute: 'equivEnd'
-    }
+      endAttribute: 'equivEnd',
+    },
   });
   return serializer.serialize(parseInnerRange(source));
 }

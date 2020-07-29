@@ -14,15 +14,16 @@ import { MessageSerializer } from '../message_serialization/message_serializer';
 import { TargetMessageRenderer } from '../message_serialization/target_message_renderer';
 import { TranslationParseError } from './translation_parse_error';
 import {
+  ParseAnalysis,
   ParsedTranslationBundle,
-  TranslationParser
+  TranslationParser,
 } from './translation_parser';
 import {
   getAttrOrThrow,
   getAttribute,
   parseInnerRange,
   canParseXml,
-  XmlTranslationParserHint
+  XmlTranslationParserHint,
 } from './translation_utils';
 import { ParsedTranslation } from '../translations';
 
@@ -41,6 +42,14 @@ export class Xliff1TranslationParser
     filePath: string,
     contents: string
   ): XmlTranslationParserHint | false {
+    const result = this.analyze(filePath, contents);
+    return result.canParse && result.hint;
+  }
+
+  analyze(
+    filePath: string,
+    contents: string
+  ): ParseAnalysis<XmlTranslationParserHint> {
     return canParseXml(filePath, contents, 'xliff', { version: '1.2' });
   }
 
@@ -79,7 +88,7 @@ class XliffFileElementVisitor extends BaseVisitor {
       this.bundle = {
         locale: getAttribute(element, 'target-language'),
         translations: XliffTranslationVisitor.extractTranslations(element),
-        diagnostics: this.diagnostics
+        diagnostics: this.diagnostics,
       };
     } else {
       return visitAll(this, element.children);
@@ -107,13 +116,13 @@ class XliffTranslationVisitor extends BaseVisitor {
       }
 
       let meaning, description;
-      element.children.forEach(el => {
+      element.children.forEach((el) => {
         if (isTargetElement(el)) {
           this.translations[id] = serializeTargetMessage(el);
         } else if (isSourceElement(el) && !this.translations[id]) {
           this.translations[id] = serializeTargetMessage(el);
         } else if (isNoteElement(el)) {
-          const from = el.attrs.find(attr => attr.name === 'from');
+          const from = el.attrs.find((attr) => attr.name === 'from');
           if (el.children.length) {
             const value = (el.children[0] as Text).value;
             if (from.value === 'description') {
@@ -147,7 +156,7 @@ class XliffTranslationVisitor extends BaseVisitor {
 function serializeTargetMessage(source: Element): ParsedTranslation {
   const serializer = new MessageSerializer(new TargetMessageRenderer(), {
     inlineElements: ['g', 'bx', 'ex', 'bpt', 'ept', 'ph', 'it', 'mrk'],
-    placeholder: { elementName: 'x', nameAttribute: 'id' }
+    placeholder: { elementName: 'x', nameAttribute: 'id' },
   });
   return serializer.serialize(parseInnerRange(source));
 }
