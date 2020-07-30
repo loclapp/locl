@@ -21,14 +21,14 @@ export class Xliff2TranslationSerializer implements TranslationSerializer {
       version: '2.0',
       xmlns: 'urn:oasis:names:tc:xliff:document:2.0',
       srcLang: locale,
-      trgLang: locale
+      trgLang: locale,
     });
-    xml.startTag('file');
-    messages.forEach(message => {
+    xml.startTag('file', { original: 'ng.template', id: 'locl' });
+    messages.forEach((message) => {
       xml.startTag('unit', {
         id:
           (message as ɵParsedMessage).id ||
-          (message as ParsedMessageLegacy).messageId
+          (message as ParsedMessageLegacy).messageId,
       });
       if (message.meaning || message.description) {
         xml.startTag('notes');
@@ -74,7 +74,7 @@ export class Xliff2TranslationSerializer implements TranslationSerializer {
         xml.startTag('pc', {
           id: `${i}`,
           equivStart: placeholderName,
-          equivEnd: placeholderName.replace(/^START/, 'CLOSE')
+          equivEnd: placeholderName.replace(/^START/, 'CLOSE'),
         });
       } else if (placeholderName.startsWith('CLOSE_')) {
         xml.endTag('pc');

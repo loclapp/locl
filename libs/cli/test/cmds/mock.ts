@@ -97,7 +97,7 @@ export const translatedXlf = `
 `;
 
 export const translatedXLF2 = `<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="fr" trgLang="fr">
-  <file>
+  <file original="ng.template" id="locl">
     <unit id="3987846127133982403">
       <segment>
         <target>Ça fonctionne! <ph id="1" equiv="INTERPOLATION"/></target>
