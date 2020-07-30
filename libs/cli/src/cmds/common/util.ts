@@ -85,7 +85,9 @@ export function findEndOfBlock(cooked: string, raw: string): number {
       return cookedIndex;
     }
   }
-  throw new Error(`Unterminated $localize metadata block in "${raw}".`);
+  throw new Error(
+    `Unterminated $localize metadata block in "${raw}". I18n metadata should follow the syntax "<meaning>|<description>@@<id>" in templates and ":<meaning>|<description>@@<id>:" in code translations`
+  );
 }
 
 /**
@@ -118,7 +120,7 @@ export function splitBlock(
     const endOfBlock = findEndOfBlock(cooked, raw);
     return {
       block: cooked.substring(1, endOfBlock),
-      text: cooked.substring(endOfBlock + 1)
+      text: cooked.substring(endOfBlock + 1),
     };
   }
 }
@@ -142,7 +144,7 @@ export function translationToMessage(
     const {
       text: messagePart,
       block: placeholderName = translation.placeholderNames[i - 1] ||
-        computePlaceholderName(i)
+        computePlaceholderName(i),
     } = splitBlock(messageParts[i], messageParts.raw[i]);
     text += `{$${placeholderName}}${messagePart}`;
     if (translation.placeholderNames.length) {
@@ -160,7 +162,7 @@ export function translationToMessage(
     meaning: translation.meaning || '',
     description: translation.description || '',
     messageParts: cleanedMessageParts,
-    placeholderNames
+    placeholderNames,
   };
 }
 
