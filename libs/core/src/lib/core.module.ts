@@ -1,4 +1,4 @@
-import { ɵMessageId, ɵTargetMessage } from '@angular/localize';
+import { MessageId, TargetMessage } from '@angular/localize';
 import { loadTranslations } from './init';
 
 export function parseTranslations(
@@ -73,7 +73,7 @@ export function getTranslations(
 
 export interface ParsedTranslationBundle {
   locale: string;
-  translations: Record<ɵMessageId, ɵTargetMessage>;
+  translations: Record<MessageId, TargetMessage>;
 }
 
 /**
